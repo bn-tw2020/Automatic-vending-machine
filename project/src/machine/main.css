@@ -1,0 +1,11 @@
+#top_layout {
+    -fx-background-color: #f5f5f5;
+}
+
+#contents_wrap {
+    -fx-background-color: #ececec;
+}
+
+#bottom_layout {
+    -fx-background-color: #eeeded;
+}
