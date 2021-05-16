@@ -8,6 +8,7 @@ import machine.model.Beverage;
 import machine.model.Coin;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Controller implements Initializable {
@@ -94,11 +95,76 @@ public class Controller implements Initializable {
             2. 살수 있다면 넣은 돈에서 돈을 깍는다.
             3. 남은 가격을 화면에 보여준다.
      */
-    public void water_Clicked(ActionEvent event) { }
-    public void coffee_Clicked(ActionEvent event) { }
-    public void sports_drink_Clicked(ActionEvent event) { }
-    public void soda_Clicked(ActionEvent event) { }
-    public void premium_coffee_Clicked(ActionEvent event) { }
+    public void water_Clicked(ActionEvent event) {
+        Date current = new Date();
+        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+        if(!water_stock.isEmpty()) {
+            water_stock.poll();
+            total_coins -= 450;
+            update_input_coin(); // 돈 삽입한거 ui 업데이트
+            onOffReturnCoin();
+            is_buy(); // 음료수 구매가능한거 ui 업데이트
+            return_coin(); // 반환가능한지 업데이트
+            is_input_1000(); // 천언을 3개 넣었는지 확인
+            output.setText("물");
+        }
+    }
+    public void coffee_Clicked(ActionEvent event) {
+        Date current = new Date();
+        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+        if(!coffee_stock.isEmpty()) {
+            coffee_stock.poll();
+            total_coins -= 500;
+            update_input_coin(); // 돈 삽입한거 ui 업데이트
+            onOffReturnCoin();
+            is_buy(); // 음료수 구매가능한거 ui 업데이트
+            return_coin(); // 반환가능한지 업데이트
+            is_input_1000(); // 천언을 3개 넣었는지 확인
+            output.setText("커피");
+        }
+    }
+    public void sports_drink_Clicked(ActionEvent event) {
+        Date current = new Date();
+        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+        if(!sports_drink_stock.isEmpty()) {
+            sports_drink_stock.poll();
+            total_coins -= 550;
+            update_input_coin(); // 돈 삽입한거 ui 업데이트
+            onOffReturnCoin();
+            is_buy(); // 음료수 구매가능한거 ui 업데이트
+            return_coin(); // 반환가능한지 업데이트
+            is_input_1000(); // 천언을 3개 넣었는지 확인
+            output.setText("이온음료");
+        }
+    }
+    public void soda_Clicked(ActionEvent event) {
+        Date current = new Date();
+        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+        if(!soda_stock.isEmpty()) {
+            soda_stock.poll();
+            total_coins -= 750;
+            update_input_coin(); // 돈 삽입한거 ui 업데이트
+            onOffReturnCoin();
+            is_buy(); // 음료수 구매가능한거 ui 업데이트
+            return_coin(); // 반환가능한지 업데이트
+            is_input_1000(); // 천언을 3개 넣었는지 확인
+            output.setText("탄산음료");
+        }
+    }
+    public void premium_coffee_Clicked(ActionEvent event) {
+        Date current = new Date();
+        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+        if(!premium_coffee_stock.isEmpty()) {
+            premium_coffee_stock.poll();
+            total_coins -= 700;
+            update_input_coin(); // 돈 삽입한거 ui 업데이트
+            onOffReturnCoin();
+            is_buy(); // 음료수 구매가능한거 ui 업데이트
+            return_coin(); // 반환가능한지 업데이트
+            is_input_1000(); // 천언을 3개 넣었는지 확인
+            output.setText("프리미엄 커피");
+        }
+    }
 
     /*
         1. 돈 넣는 과정
@@ -337,12 +403,13 @@ public class Controller implements Initializable {
         System.out.println("100원 남은 갯수 : " + change_100.size());
         System.out.println("50원 남은 갯수 : " + change_50.size());
         System.out.println("10원 남은 갯수 : " + change_10.size());
-        output.appendText(outputString.trim());
+        output.setText(outputString.trim());
         text_coin.setText(Integer.toString(total_coins));
         coins.clear(); // 어떤 돈이 들어있는지에 대한 초기화
 
         coin_10.setDisable(false); coin_50.setDisable(false); coin_100.setDisable(false);
         coin_500.setDisable(false); coin_1000.setDisable(false);
+        is_buy();
     }
 
 

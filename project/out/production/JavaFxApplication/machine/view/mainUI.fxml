@@ -63,27 +63,27 @@
                                         </ImageView>
                                         <Text layoutX="87.0" layoutY="223.0" strokeType="OUTSIDE" strokeWidth="0.0" text="동전 입력" />
                                         <TextField fx:id="text_coin" alignment="CENTER" layoutX="63.0" layoutY="233.0" prefHeight="32.0" prefWidth="100.0" />
-                                        <Button fx:id="coin_10" disable="true" layoutX="229.0" layoutY="238.0" mnemonicParsing="false" onAction="#coinInsert_10" prefHeight="20.0" prefWidth="54.0" text="10원">
+                                        <Button fx:id="coin_10" disable="true" layoutX="211.0" layoutY="239.0" mnemonicParsing="false" onAction="#coinInsert_10" prefHeight="20.0" prefWidth="54.0" text="10원">
                                             <font>
                                                 <Font size="10.0" />
                                             </font>
                                         </Button>
-                                        <Button fx:id="coin_50" disable="true" layoutX="302.0" layoutY="238.0" mnemonicParsing="false" onAction="#coinInsert_50" prefHeight="20.0" prefWidth="54.0" text="50원">
+                                        <Button fx:id="coin_50" disable="true" layoutX="284.0" layoutY="239.0" mnemonicParsing="false" onAction="#coinInsert_50" prefHeight="20.0" prefWidth="54.0" text="50원">
                                             <font>
                                                 <Font size="10.0" />
                                             </font>
                                         </Button>
-                                        <Button fx:id="coin_100" disable="true" layoutX="377.0" layoutY="238.0" mnemonicParsing="false" onAction="#coinInsert_100" prefHeight="20.0" prefWidth="54.0" text="100원">
+                                        <Button fx:id="coin_100" disable="true" layoutX="359.0" layoutY="239.0" mnemonicParsing="false" onAction="#coinInsert_100" prefHeight="20.0" prefWidth="54.0" text="100원">
                                             <font>
                                                 <Font size="10.0" />
                                             </font>
                                         </Button>
-                                        <Button fx:id="coin_500" disable="true" layoutX="451.0" layoutY="238.0" mnemonicParsing="false" onAction="#coinInsert_500" prefHeight="20.0" prefWidth="54.0" text="500원">
+                                        <Button fx:id="coin_500" disable="true" layoutX="433.0" layoutY="239.0" mnemonicParsing="false" onAction="#coinInsert_500" prefHeight="20.0" prefWidth="54.0" text="500원">
                                             <font>
                                                 <Font size="10.0" />
                                             </font>
                                         </Button>
-                                        <Button fx:id="coin_1000" disable="true" layoutX="523.0" layoutY="238.0" mnemonicParsing="false" onAction="#coinInsert_1000" prefHeight="20.0" prefWidth="54.0" text="1000원" textAlignment="CENTER">
+                                        <Button fx:id="coin_1000" disable="true" layoutX="505.0" layoutY="239.0" mnemonicParsing="false" onAction="#coinInsert_1000" prefHeight="20.0" prefWidth="54.0" text="1000원" textAlignment="CENTER">
                                             <font>
                                                 <Font size="10.0" />
                                             </font>
@@ -106,8 +106,8 @@
                 </Button>
 
 
-                <TextField fx:id="output" alignment="CENTER" editable="false" layoutX="229.0" layoutY="-32.0" maxHeight="75.0" maxWidth="220.0" minHeight="75.0" minWidth="220.0" prefHeight="75.0" prefWidth="220.0" />
-                   <Button fx:id="coin_return" disable="true" layoutX="61.0" layoutY="14.0" mnemonicParsing="false" onAction="#coinReturn" prefHeight="20.0" prefWidth="100.0" text="반환하기" textAlignment="CENTER">
+                <TextField fx:id="output" alignment="CENTER" editable="false" layoutX="194.0" layoutY="-32.0" maxHeight="75.0" maxWidth="382.0" minHeight="57.0" minWidth="220.0" prefHeight="57.0" prefWidth="382.0" />
+                   <Button fx:id="coin_return" disable="true" layoutX="61.0" layoutY="4.0" mnemonicParsing="false" onAction="#coinReturn" prefHeight="20.0" prefWidth="100.0" text="반환하기" textAlignment="CENTER">
                        <font>
                            <Font size="10.0" />
                        </font>
