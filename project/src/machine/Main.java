@@ -1,10 +1,12 @@
 package machine;
 
+import Server.model.StageStore;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import machine.controller.Controller;
 
 import java.util.Objects;
 
@@ -12,6 +14,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        StageStore.stage = primaryStage;
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("view/mainUI.fxml")));
         root.getStylesheets().add(getClass().getResource("main.css").toString());
         primaryStage.setTitle("Machine");

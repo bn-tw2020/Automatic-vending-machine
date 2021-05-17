@@ -1,26 +1,36 @@
 package machine.controller;
 
+import Server.model.StageStore;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import machine.model.Beverage;
 import machine.model.Coin;
 
+import java.io.*;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Controller implements Initializable {
-
+    Socket socket;
+    private final Stage stage = StageStore.stage;
     // 음료수 버튼, 동전 넣는 버튼, 반환 버튼, 관리자 로그인 버튼
     public Button soda, coffee, water, sports_drink, premium_coffee;
     public Button coin_10, coin_50, coin_100, coin_500, coin_1000;
+    public String item1_name, item2_name, item3_name, item4_name, item5_name;
+    public int item1_price, item2_price, item3_price, item4_price, item5_price;
     public TextField text_coin;
     public Button coin_return;
     public Button log_in;
     public TextField output;
-
     // 거스름돈
     Stack<Coin> change_10, change_50, change_100, change_500, change_1000;
     // 음료 재고
@@ -30,17 +40,15 @@ public class Controller implements Initializable {
     //    HashMap<String, Integer> coins;
     ArrayList<Coin> coins = new ArrayList<>();
 
-
     /*
         1. 초기 세팅
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        stage.setOnCloseRequest(event -> send("close"));
         text_coin.setEditable(false);
-//        output.setEditable(false);
-        setting_change(5);
-        setting_beverage(3);
         active_button();
+        startClient();
     }
 
     // 초기 거스름돈 5개씩
@@ -69,11 +77,11 @@ public class Controller implements Initializable {
         soda_stock = new LinkedList<>();
 
         for (int i = 0; i < count; i++) {
-            water_stock.add(new Beverage("water", 450));
-            coffee_stock.add(new Beverage("coffee", 500));
-            sports_drink_stock.add(new Beverage("sport_drink", 550));
-            premium_coffee_stock.add(new Beverage("premium_coffee", 700));
-            soda_stock.add(new Beverage("soda", 750));
+            water_stock.add(new Beverage(item1_name, item1_price));
+            coffee_stock.add(new Beverage(item2_name, item2_price));
+            sports_drink_stock.add(new Beverage(item3_name, item3_price));
+            premium_coffee_stock.add(new Beverage(item4_name, item4_price));
+            soda_stock.add(new Beverage(item5_name, item5_price));
         }
     }
 
@@ -99,14 +107,15 @@ public class Controller implements Initializable {
         Date current = new Date();
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
         if(!water_stock.isEmpty()) {
-            water_stock.poll();
-            total_coins -= 450;
-            update_input_coin(); // 돈 삽입한거 ui 업데이트
-            onOffReturnCoin();
-            is_buy(); // 음료수 구매가능한거 ui 업데이트
-            return_coin(); // 반환가능한지 업데이트
-            is_input_1000(); // 천언을 3개 넣었는지 확인
-            output.setText("물");
+            send(item1_name);
+//            water_stock.poll();
+//            total_coins -= item1_price;
+//            update_input_coin(); // 돈 삽입한거 ui 업데이트
+//            onOffReturnCoin();
+//            is_buy(); // 음료수 구매가능한거 ui 업데이트
+//            return_coin(); // 반환가능한지 업데이트
+//            is_input_1000(); // 천언을 3개 넣었는지 확인
+//            output.setText(item1_name);
         }
     }
     public void coffee_Clicked(ActionEvent event) {
@@ -114,13 +123,13 @@ public class Controller implements Initializable {
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
         if(!coffee_stock.isEmpty()) {
             coffee_stock.poll();
-            total_coins -= 500;
+            total_coins -= item2_price;
             update_input_coin(); // 돈 삽입한거 ui 업데이트
             onOffReturnCoin();
             is_buy(); // 음료수 구매가능한거 ui 업데이트
             return_coin(); // 반환가능한지 업데이트
             is_input_1000(); // 천언을 3개 넣었는지 확인
-            output.setText("커피");
+            output.setText(item2_name);
         }
     }
     public void sports_drink_Clicked(ActionEvent event) {
@@ -128,27 +137,13 @@ public class Controller implements Initializable {
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
         if(!sports_drink_stock.isEmpty()) {
             sports_drink_stock.poll();
-            total_coins -= 550;
+            total_coins -= item3_price;
             update_input_coin(); // 돈 삽입한거 ui 업데이트
             onOffReturnCoin();
             is_buy(); // 음료수 구매가능한거 ui 업데이트
             return_coin(); // 반환가능한지 업데이트
             is_input_1000(); // 천언을 3개 넣었는지 확인
-            output.setText("이온음료");
-        }
-    }
-    public void soda_Clicked(ActionEvent event) {
-        Date current = new Date();
-        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-        if(!soda_stock.isEmpty()) {
-            soda_stock.poll();
-            total_coins -= 750;
-            update_input_coin(); // 돈 삽입한거 ui 업데이트
-            onOffReturnCoin();
-            is_buy(); // 음료수 구매가능한거 ui 업데이트
-            return_coin(); // 반환가능한지 업데이트
-            is_input_1000(); // 천언을 3개 넣었는지 확인
-            output.setText("탄산음료");
+            output.setText(item3_name);
         }
     }
     public void premium_coffee_Clicked(ActionEvent event) {
@@ -156,13 +151,27 @@ public class Controller implements Initializable {
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
         if(!premium_coffee_stock.isEmpty()) {
             premium_coffee_stock.poll();
-            total_coins -= 700;
+            total_coins -= item4_price;
             update_input_coin(); // 돈 삽입한거 ui 업데이트
             onOffReturnCoin();
             is_buy(); // 음료수 구매가능한거 ui 업데이트
             return_coin(); // 반환가능한지 업데이트
             is_input_1000(); // 천언을 3개 넣었는지 확인
-            output.setText("프리미엄 커피");
+            output.setText(item4_name);
+        }
+    }
+    public void soda_Clicked(ActionEvent event) {
+        Date current = new Date();
+        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+        if(!soda_stock.isEmpty()) {
+            soda_stock.poll();
+            total_coins -= item5_price;
+            update_input_coin(); // 돈 삽입한거 ui 업데이트
+            onOffReturnCoin();
+            is_buy(); // 음료수 구매가능한거 ui 업데이트
+            return_coin(); // 반환가능한지 업데이트
+            is_input_1000(); // 천언을 3개 넣었는지 확인
+            output.setText(item5_name);
         }
     }
 
@@ -250,7 +259,7 @@ public class Controller implements Initializable {
     // 구매 가능한가?
     public void is_buy() {
         // 물 구매가능? 품절인가?
-        if (total_coins >= 450) {
+        if (total_coins >= item1_price) {
             water.setDisable(false);
             if (water_stock.isEmpty()) {
                 water.setDisable(true);
@@ -264,7 +273,7 @@ public class Controller implements Initializable {
             }
         }
 
-        if (total_coins >= 500) {
+        if (total_coins >= item2_price) {
             coffee.setDisable(false);
             if (coffee_stock.isEmpty()) {
                 water.setDisable(true);
@@ -278,7 +287,7 @@ public class Controller implements Initializable {
             }
         }
 
-        if (total_coins >= 550) {
+        if (total_coins >= item3_price) {
             sports_drink.setDisable(false);
             if (sports_drink_stock.isEmpty()) {
                 water.setDisable(true);
@@ -292,7 +301,7 @@ public class Controller implements Initializable {
             }
         }
 
-        if (total_coins >= 700) {
+        if (total_coins >= item4_price) {
             premium_coffee.setDisable(false);
             if (premium_coffee_stock.isEmpty()) {
                 premium_coffee.setDisable(true);
@@ -306,7 +315,7 @@ public class Controller implements Initializable {
             }
         }
 
-        if (total_coins >= 750) {
+        if (total_coins >= item5_price) {
             soda.setDisable(false);
             if (soda_stock.isEmpty()) {
                 soda.setDisable(true);
@@ -420,6 +429,114 @@ public class Controller implements Initializable {
         1. 관리자 로그인
      */
     public void login_btn(ActionEvent actionEvent) {
+    }
+
+
+    public void startClient(){
+        // 연결 시작 코드
+        Thread thread = new Thread(){
+            @Override
+            public void run(){
+                try {
+                    socket = new Socket();
+                    socket.connect(new InetSocketAddress("127.0.0.1", 7777));
+                    Platform.runLater(()->{ System.out.println("[연결 완료:  " + socket.getRemoteSocketAddress() + "]"); });
+                }catch(Exception e){
+                    System.out.println("[서버 통신 안됨]");
+                    if(!socket.isClosed()) { stopClient(); }
+                    return;
+                }
+                receive(); // 서버에서 보낸 데이터 받기
+            }
+        };
+        thread.start();
+    }
+
+    public void stopClient(){
+        // 연결 끊기 코드
+        try{
+            Platform.runLater(()->{ System.out.println("연결 끊음"); });
+            if(socket != null && !socket.isClosed()){
+                socket.close();
+            }
+        }catch(IOException ignored){ }
+    }
+
+    void receive(){
+        // 데이터 받기 코드
+        while(true){
+            try {
+                InputStream inputStream = socket.getInputStream();
+                DataInputStream dataInputStream = new DataInputStream(inputStream);
+                String meta = null;
+
+                while((meta = dataInputStream.readUTF()) != null) {
+                    if(meta.startsWith("init")) { // 소켓과의 초기 세팅
+                        int initChange = dataInputStream.readInt();
+                        int initBeverage = dataInputStream.readInt();
+                        setting_change(initChange);
+                        setting_beverage(initBeverage);
+                        item1_name = dataInputStream.readUTF(); item1_price = dataInputStream.readInt();
+                        item2_name = dataInputStream.readUTF(); item2_price = dataInputStream.readInt();
+                        item3_name = dataInputStream.readUTF(); item3_price = dataInputStream.readInt();
+                        item4_name = dataInputStream.readUTF(); item4_price = dataInputStream.readInt();
+                        item5_name = dataInputStream.readUTF(); item5_price = dataInputStream.readInt();
+                        Platform.runLater(()-> { // sports_drink, premium_coffee;
+                            water.setText(item1_name); coffee.setText(item2_name); sports_drink.setText(item3_name);
+                            premium_coffee.setText(item4_name); soda.setText(item5_name);
+                        });
+                    }
+                    else if(meta.startsWith("success")) {
+                        String check = dataInputStream.readUTF();
+                        if(check.equals(item1_name)) {
+                            if(!water_stock.isEmpty()) {
+                                water_stock.poll();
+                                total_coins -= item1_price;
+                                update_input_coin(); // 돈 삽입한거 ui 업데이트
+                                onOffReturnCoin();
+                                is_buy(); // 음료수 구매가능한거 ui 업데이트
+                                return_coin(); // 반환가능한지 업데이트
+                                is_input_1000(); // 천언을 3개 넣었는지 확인
+                                output.setText(item1_name);
+                            }
+                        }
+
+                    }
+                }
+
+            } catch (IOException e) {
+                System.out.println("[서버 통신 안됨]");
+                stopClient();
+                break;
+            }
+        }
+    }
+
+    void send(String message){
+        // 데이터 전송 코드
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+                try {
+                    DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                    if(message.equals("close")) {
+                        Platform.runLater(()-> System.out.println(message));
+                        dataOutputStream.writeUTF("close");
+                        dataOutputStream.flush();
+                    }
+                    else if(message.equals(item1_name)) {
+                        dataOutputStream.writeUTF("data");
+                        dataOutputStream.writeUTF(item1_name);
+                        dataOutputStream.flush();
+                    }
+                } catch (IOException e) {
+                    Platform.runLater(()-> System.out.println("[서버 통신 안됨]"));
+                    stopClient();
+                }
+
+            }
+        };
+        thread.start();
     }
 
 }
