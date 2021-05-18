@@ -1,15 +1,12 @@
 package Server.controller;
 
 import Server.model.Item;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTreeTableCell;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -27,28 +24,19 @@ public class Controller implements Initializable {
     ExecutorService executorService;
     ServerSocket serverSocket;
     List<Client> connections = new Vector<Client>(); // 스레드에 안전함
-
+    @FXML TreeTableView<Item> tableView, tableView1;
+    @FXML TreeTableColumn<Item, String> name, name1;
+    @FXML TreeTableColumn<Item, String> price, price1;
+    @FXML TreeTableColumn<Item, String> stock, stock1;
+    @FXML TreeTableColumn<Item, String> current, current1;
     @FXML public TextArea txtDisplay;
-    @FXML private TableView<Item> table, table1;
-    @FXML private TableColumn<Item, String> name, name1;
-    @FXML private TableColumn<Item, Integer> price, price1;
-    @FXML private TableColumn<Item, Integer> stock, stock1;
-    @FXML private TableColumn<Item, Integer> current, current1;
-    public String check = null;
-    public ObservableList<Item> list = FXCollections.observableArrayList(new Item("물", 450, 5, 0), new Item("커피", 500, 5, 0),
-            new Item("이온음료", 550, 5, 0), new Item("프리미엄 커피", 700, 5, 0), new Item("탄산 음료", 750, 5, 0));
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        table.setEditable(true);
-        name.setCellValueFactory(new PropertyValueFactory<Item, String>("name"));
-        price.setCellValueFactory(new PropertyValueFactory<Item, Integer>("price"));
-        stock.setCellValueFactory(new PropertyValueFactory<Item, Integer>("stock"));
-        current.setCellValueFactory(new PropertyValueFactory<Item, Integer>("current"));
-        table.setItems(list);
-
         // 서버 시작 코드 (Executor Service 생성, ServerSocket 생성 및 포트 바인딩, 연결 수락)
-        executorService = Executors.newFixedThreadPool(3);
+
+        executorService = Executors.newFixedThreadPool(50);
         try {
             serverSocket = new ServerSocket();
             serverSocket.bind(new InetSocketAddress("localhost", 7777));
@@ -68,7 +56,7 @@ public class Controller implements Initializable {
                 while (true) {
                     try {
                         Socket socket = serverSocket.accept(); // 연결 수락
-
+                        while(connections.size() >= 2) {}
                         String message = "[연결 수락 : " + socket.getRemoteSocketAddress() + ": " + Thread.currentThread().getName() + "]";
                         Platform.runLater(() -> displayText(message));
                         Client client = new Client(socket);
@@ -110,8 +98,84 @@ public class Controller implements Initializable {
         // 데이터 통신 코드
         Socket socket;
         int total_coins = 0; // 총 수익금
+        public String check = null;
+        TreeItem<Item> item1, item2, item3, item4, item5, root;
+        Boolean flag = false;
         Client(Socket socket) {
             this.socket = socket;
+            item1 = new TreeItem<>(new Item("물", "450", "5", "0"));
+            item2 = new TreeItem<>(new Item("커피", "500", "5", "0"));
+            item3 = new TreeItem<>(new Item("이온음료", "550", "5", "0"));
+            item4 = new TreeItem<>(new Item("프리미엄 커피", "700", "5", "0"));
+            item5 = new TreeItem<>(new Item("탄산 음료", "750", "5", "0"));
+            root = new TreeItem<>(new Item("Name", "0", "0", "0"));
+            root.getChildren().setAll(item1, item2, item3, item4, item5);
+
+            Platform.runLater(()-> {
+                if(tableView.getRoot() == null) {
+                    flag = true;
+                    name.setCellValueFactory(param -> param.getValue().getValue().namePropertyProperty());
+                    price.setCellValueFactory(param -> param.getValue().getValue().pricePropertyProperty());
+                    stock.setCellValueFactory(param -> param.getValue().getValue().stockPropertyProperty());
+                    current.setCellValueFactory(param -> param.getValue().getValue().currentPropertyProperty());
+
+                    name.setCellFactory(param -> new TextFieldTreeTableCell<>()); price.setCellFactory(param -> new TextFieldTreeTableCell<>());
+                    stock.setCellFactory(param -> new TextFieldTreeTableCell<>()); current.setCellFactory(param -> new TextFieldTreeTableCell<>());
+                    name.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn()); price.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
+                    stock.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn()); current.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
+
+                    name.setOnEditCommit(event -> {
+                        TreeItem<Item> currentEditingItem = tableView.getTreeItem(event.getTreeTablePosition().getRow());
+                        currentEditingItem.getValue().setNameProperty(event.getNewValue());
+                    });
+                    price.setOnEditCommit(event -> {
+                        TreeItem<Item> currentEditingItem = tableView.getTreeItem(event.getTreeTablePosition().getRow());
+                        currentEditingItem.getValue().setPriceProperty(event.getNewValue());
+                    });
+                    stock.setOnEditCommit(event -> {
+                        TreeItem<Item> currentEdtingItem = tableView.getTreeItem(event.getTreeTablePosition().getRow());
+                        currentEdtingItem.getValue().setStockProperty(event.getNewValue());
+                    });
+                    current.setOnEditCommit(event -> {
+                        TreeItem<Item> currentEdtingItem = tableView.getTreeItem(event.getTreeTablePosition().getRow());
+                        currentEdtingItem.getValue().setCurrentProperty(event.getNewValue());
+                    });
+                    tableView.setEditable(true);
+                    tableView.setRoot(root);
+                    tableView.setShowRoot(false);
+                }
+                else if(tableView1.getRoot() == null) {
+                    name1.setCellValueFactory(param -> param.getValue().getValue().namePropertyProperty());
+                    price1.setCellValueFactory(param -> param.getValue().getValue().pricePropertyProperty());
+                    stock1.setCellValueFactory(param -> param.getValue().getValue().stockPropertyProperty());
+                    current1.setCellValueFactory(param -> param.getValue().getValue().currentPropertyProperty());
+
+                    name1.setCellFactory(param -> new TextFieldTreeTableCell<>()); price1.setCellFactory(param -> new TextFieldTreeTableCell<>());
+                    stock1.setCellFactory(param -> new TextFieldTreeTableCell<>()); current1.setCellFactory(param -> new TextFieldTreeTableCell<>());
+                    name1.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn()); price1.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
+                    stock1.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn()); current1.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
+
+                    name1.setOnEditCommit(event -> {
+                        TreeItem<Item> currentEditingItem = tableView1.getTreeItem(event.getTreeTablePosition().getRow());
+                        currentEditingItem.getValue().setNameProperty(event.getNewValue());
+                    });
+                    price1.setOnEditCommit(event -> {
+                        TreeItem<Item> currentEditingItem = tableView1.getTreeItem(event.getTreeTablePosition().getRow());
+                        currentEditingItem.getValue().setPriceProperty(event.getNewValue());
+                    });
+                    stock1.setOnEditCommit(event -> {
+                        TreeItem<Item> currentEdtingItem = tableView1.getTreeItem(event.getTreeTablePosition().getRow());
+                        currentEdtingItem.getValue().setStockProperty(event.getNewValue());
+                    });
+                    current1.setOnEditCommit(event -> {
+                        TreeItem<Item> currentEdtingItem = tableView1.getTreeItem(event.getTreeTablePosition().getRow());
+                        currentEdtingItem.getValue().setCurrentProperty(event.getNewValue());
+                    });
+                    tableView1.setEditable(true);
+                    tableView1.setRoot(root);
+                    tableView1.setShowRoot(false);
+                }
+            });
             send("init");
             receive();
         }
@@ -129,25 +193,44 @@ public class Controller implements Initializable {
                             String meta = null;
                             while ((meta = dataInputStream.readUTF()) != null) {
                                 if (meta.startsWith("close")) {
-                                    Platform.runLater(() -> {
-                                        displayText("연결이 끊어졌습니다.");
-                                    });
+                                    Platform.runLater(() -> { displayText("연결이 끊어졌습니다."); });
                                     connections.remove(Client.this);
                                     socket.close();
-                                    Platform.runLater(() -> displayText("[연결 개수 : " + connections.size() + " ]"));
+
+                                    Platform.runLater(() -> {
+                                        if(flag){
+                                            tableView.setRoot(null);
+                                        } else {
+                                            tableView1.setRoot(null);
+                                        }
+                                        displayText("[연결 개수 : " + connections.size() + " ]");
+                                    });
                                 }
                                 else if((meta.startsWith("data"))) {
                                     check = dataInputStream.readUTF();
                                     // 구매 처리하기
-                                    if(list.get(0).getName().equals(check)) { // 물 구매
-                                        total_coins += list.get(0).getPrice();
+                                    if(item1.getValue().getNameProperty().equals(check)) { // 물 구매
+                                        total_coins += Integer.parseInt(item1.getValue().getPriceProperty());
+                                        send("success");
+                                    }
+                                    else if(item2.getValue().getNameProperty().equals(check)) {
+                                        total_coins += Integer.parseInt(item2.getValue().getPriceProperty());
+                                        send("success");
+                                    }
+                                    else if(item3.getValue().getNameProperty().equals(check)) {
+                                        total_coins += Integer.parseInt(item3.getValue().getPriceProperty());
+                                        send("success");
+                                    }
+                                    else if(item4.getValue().getNameProperty().equals(check)) {
+                                        total_coins += Integer.parseInt(item4.getValue().getPriceProperty());
+                                        send("success");
+                                    }
+                                    else if(item5.getValue().getNameProperty().equals(check)) {
+                                        total_coins += Integer.parseInt(item5.getValue().getPriceProperty());
                                         send("success");
                                     }
                                 }
                             }
-                            //for(Client client : connections){
-//                                client.send(data); // 모든 클라이언트에게 보냄
-//                            }
                         }
                     } catch (Exception e) {
                         try {
@@ -177,19 +260,43 @@ public class Controller implements Initializable {
                             dataOutputStream.writeUTF("init");
                             dataOutputStream.writeInt(5);
                             dataOutputStream.writeInt(3);
-                            dataOutputStream.writeUTF(list.get(0).getName()); dataOutputStream.writeInt(list.get(0).getPrice());
-                            dataOutputStream.writeUTF(list.get(1).getName()); dataOutputStream.writeInt(list.get(1).getPrice());
-                            dataOutputStream.writeUTF(list.get(2).getName()); dataOutputStream.writeInt(list.get(2).getPrice());
-                            dataOutputStream.writeUTF(list.get(3).getName()); dataOutputStream.writeInt(list.get(3).getPrice());
-                            dataOutputStream.writeUTF(list.get(4).getName()); dataOutputStream.writeInt(list.get(4).getPrice());
+                            dataOutputStream.writeUTF(item1.getValue().getNameProperty()); dataOutputStream.writeInt(Integer.parseInt(item1.getValue().getPriceProperty()));
+                            dataOutputStream.writeUTF(item2.getValue().getNameProperty()); dataOutputStream.writeInt(Integer.parseInt(item2.getValue().getPriceProperty()));
+                            dataOutputStream.writeUTF(item3.getValue().getNameProperty()); dataOutputStream.writeInt(Integer.parseInt(item3.getValue().getPriceProperty()));
+                            dataOutputStream.writeUTF(item4.getValue().getNameProperty()); dataOutputStream.writeInt(Integer.parseInt(item4.getValue().getPriceProperty()));
+                            dataOutputStream.writeUTF(item5.getValue().getNameProperty()); dataOutputStream.writeInt(Integer.parseInt(item5.getValue().getPriceProperty()));
                             dataOutputStream.flush();
                         }
                         else if(message.equals("success")) {
-                            if(list.get(0).getName().equals(check)) { // 물 성공
+                            if(item1.getValue().getNameProperty().equals(check)) { // 물 성공
                                 dataOutputStream.writeUTF("success");
                                 dataOutputStream.writeUTF(check);
                                 dataOutputStream.flush();
-                                Platform.runLater(()-> System.out.println(check + " " + total_coins));
+                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + connections.indexOf(Client.this) + " : " + check + " " + item1.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
+                            }
+                            else if(item2.getValue().getNameProperty().equals(check)) { // 커피 성공
+                                dataOutputStream.writeUTF("success");
+                                dataOutputStream.writeUTF(check);
+                                dataOutputStream.flush();
+                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + connections.indexOf(Client.this) + " : " + check + " " + item2.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
+                            }
+                            else if(item3.getValue().getNameProperty().equals(check)) { // 이온 성공
+                                dataOutputStream.writeUTF("success");
+                                dataOutputStream.writeUTF(check);
+                                dataOutputStream.flush();
+                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + connections.indexOf(Client.this) + " : " + check + " " + item3.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
+                            }
+                            else if(item4.getValue().getNameProperty().equals(check)) { // 비싼커피 성공
+                                dataOutputStream.writeUTF("success");
+                                dataOutputStream.writeUTF(check);
+                                dataOutputStream.flush();
+                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + connections.indexOf(Client.this) + " : " + check + " " + item4.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
+                            }
+                            else if(item5.getValue().getNameProperty().equals(check)) { // 소다 성공
+                                dataOutputStream.writeUTF("success");
+                                dataOutputStream.writeUTF(check);
+                                dataOutputStream.flush();
+                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + connections.indexOf(Client.this) + " : " + check + " " + item5.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
                             }
                         }
 

@@ -122,56 +122,60 @@ public class Controller implements Initializable {
         Date current = new Date();
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
         if(!coffee_stock.isEmpty()) {
-            coffee_stock.poll();
-            total_coins -= item2_price;
-            update_input_coin(); // 돈 삽입한거 ui 업데이트
-            onOffReturnCoin();
-            is_buy(); // 음료수 구매가능한거 ui 업데이트
-            return_coin(); // 반환가능한지 업데이트
-            is_input_1000(); // 천언을 3개 넣었는지 확인
-            output.setText(item2_name);
+            send(item2_name);
+//            coffee_stock.poll();
+//            total_coins -= item2_price;
+//            update_input_coin(); // 돈 삽입한거 ui 업데이트
+//            onOffReturnCoin();
+//            is_buy(); // 음료수 구매가능한거 ui 업데이트
+//            return_coin(); // 반환가능한지 업데이트
+//            is_input_1000(); // 천언을 3개 넣었는지 확인
+//            output.setText(item2_name);
         }
     }
     public void sports_drink_Clicked(ActionEvent event) {
         Date current = new Date();
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
         if(!sports_drink_stock.isEmpty()) {
-            sports_drink_stock.poll();
-            total_coins -= item3_price;
-            update_input_coin(); // 돈 삽입한거 ui 업데이트
-            onOffReturnCoin();
-            is_buy(); // 음료수 구매가능한거 ui 업데이트
-            return_coin(); // 반환가능한지 업데이트
-            is_input_1000(); // 천언을 3개 넣었는지 확인
-            output.setText(item3_name);
+            send(item3_name);
+//            sports_drink_stock.poll();
+//            total_coins -= item3_price;
+//            update_input_coin(); // 돈 삽입한거 ui 업데이트
+//            onOffReturnCoin();
+//            is_buy(); // 음료수 구매가능한거 ui 업데이트
+//            return_coin(); // 반환가능한지 업데이트
+//            is_input_1000(); // 천언을 3개 넣었는지 확인
+//            output.setText(item3_name);
         }
     }
     public void premium_coffee_Clicked(ActionEvent event) {
         Date current = new Date();
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
         if(!premium_coffee_stock.isEmpty()) {
-            premium_coffee_stock.poll();
-            total_coins -= item4_price;
-            update_input_coin(); // 돈 삽입한거 ui 업데이트
-            onOffReturnCoin();
-            is_buy(); // 음료수 구매가능한거 ui 업데이트
-            return_coin(); // 반환가능한지 업데이트
-            is_input_1000(); // 천언을 3개 넣었는지 확인
-            output.setText(item4_name);
+            send(item4_name);
+//            premium_coffee_stock.poll();
+//            total_coins -= item4_price;
+//            update_input_coin(); // 돈 삽입한거 ui 업데이트
+//            onOffReturnCoin();
+//            is_buy(); // 음료수 구매가능한거 ui 업데이트
+//            return_coin(); // 반환가능한지 업데이트
+//            is_input_1000(); // 천언을 3개 넣었는지 확인
+//            output.setText(item4_name);
         }
     }
     public void soda_Clicked(ActionEvent event) {
         Date current = new Date();
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
         if(!soda_stock.isEmpty()) {
-            soda_stock.poll();
-            total_coins -= item5_price;
-            update_input_coin(); // 돈 삽입한거 ui 업데이트
-            onOffReturnCoin();
-            is_buy(); // 음료수 구매가능한거 ui 업데이트
-            return_coin(); // 반환가능한지 업데이트
-            is_input_1000(); // 천언을 3개 넣었는지 확인
-            output.setText(item5_name);
+            send(item5_name);
+//            soda_stock.poll();
+//            total_coins -= item5_price;
+//            update_input_coin(); // 돈 삽입한거 ui 업데이트
+//            onOffReturnCoin();
+//            is_buy(); // 음료수 구매가능한거 ui 업데이트
+//            return_coin(); // 반환가능한지 업데이트
+//            is_input_1000(); // 천언을 3개 넣었는지 확인
+//            output.setText(item5_name);
         }
     }
 
@@ -259,75 +263,77 @@ public class Controller implements Initializable {
     // 구매 가능한가?
     public void is_buy() {
         // 물 구매가능? 품절인가?
-        if (total_coins >= item1_price) {
-            water.setDisable(false);
-            if (water_stock.isEmpty()) {
+        Platform.runLater(()->{
+            if (total_coins >= item1_price) {
+                water.setDisable(false);
+                if (water_stock.isEmpty()) {
+                    water.setDisable(true);
+                    water.setText("Sold Out");
+                }
+            } else {
                 water.setDisable(true);
-                water.setText("Sold Out");
+                if (water_stock.isEmpty()) {
+                    water.setDisable(true);
+                    water.setText("Sold Out");
+                }
             }
-        } else {
-            water.setDisable(true);
-            if (water_stock.isEmpty()) {
-                water.setDisable(true);
-                water.setText("Sold Out");
-            }
-        }
 
-        if (total_coins >= item2_price) {
-            coffee.setDisable(false);
-            if (coffee_stock.isEmpty()) {
-                water.setDisable(true);
-                water.setText("Sold Out");
-            }
-        } else {
-            coffee.setDisable(true);
-            if (coffee_stock.isEmpty()) {
+            if (total_coins >= item2_price) {
+                coffee.setDisable(false);
+                if (coffee_stock.isEmpty()) {
+                    water.setDisable(true);
+                    water.setText("Sold Out");
+                }
+            } else {
                 coffee.setDisable(true);
-                coffee.setText("Sold Out");
+                if (coffee_stock.isEmpty()) {
+                    coffee.setDisable(true);
+                    coffee.setText("Sold Out");
+                }
             }
-        }
 
-        if (total_coins >= item3_price) {
-            sports_drink.setDisable(false);
-            if (sports_drink_stock.isEmpty()) {
-                water.setDisable(true);
-                water.setText("Sold Out");
-            }
-        } else {
-            sports_drink.setDisable(true);
-            if (sports_drink_stock.isEmpty()) {
+            if (total_coins >= item3_price) {
+                sports_drink.setDisable(false);
+                if (sports_drink_stock.isEmpty()) {
+                    water.setDisable(true);
+                    water.setText("Sold Out");
+                }
+            } else {
                 sports_drink.setDisable(true);
-                sports_drink.setText("Sold Out");
+                if (sports_drink_stock.isEmpty()) {
+                    sports_drink.setDisable(true);
+                    sports_drink.setText("Sold Out");
+                }
             }
-        }
 
-        if (total_coins >= item4_price) {
-            premium_coffee.setDisable(false);
-            if (premium_coffee_stock.isEmpty()) {
+            if (total_coins >= item4_price) {
+                premium_coffee.setDisable(false);
+                if (premium_coffee_stock.isEmpty()) {
+                    premium_coffee.setDisable(true);
+                    premium_coffee.setText("Sold Out");
+                }
+            } else {
                 premium_coffee.setDisable(true);
-                premium_coffee.setText("Sold Out");
+                if (premium_coffee_stock.isEmpty()) {
+                    premium_coffee.setDisable(true);
+                    premium_coffee.setText("Sold Out");
+                }
             }
-        } else {
-            premium_coffee.setDisable(true);
-            if (premium_coffee_stock.isEmpty()) {
-                premium_coffee.setDisable(true);
-                premium_coffee.setText("Sold Out");
-            }
-        }
 
-        if (total_coins >= item5_price) {
-            soda.setDisable(false);
-            if (soda_stock.isEmpty()) {
+            if (total_coins >= item5_price) {
+                soda.setDisable(false);
+                if (soda_stock.isEmpty()) {
+                    soda.setDisable(true);
+                    soda.setText("Sold Out");
+                }
+            } else {
                 soda.setDisable(true);
-                soda.setText("Sold Out");
+                if (soda_stock.isEmpty()) {
+                    soda.setDisable(true);
+                    soda.setText("Sold Out");
+                }
             }
-        } else {
-            soda.setDisable(true);
-            if (soda_stock.isEmpty()) {
-                soda.setDisable(true);
-                soda.setText("Sold Out");
-            }
-        }
+        });
     }
 
     // 반환 가능한지 버튼 활성화
@@ -500,7 +506,54 @@ public class Controller implements Initializable {
                                 output.setText(item1_name);
                             }
                         }
-
+                        else if(check.equals(item2_name)) {
+                            if(!coffee_stock.isEmpty()) {
+                                coffee_stock.poll();
+                                total_coins -= item2_price;
+                                update_input_coin(); // 돈 삽입한거 ui 업데이트
+                                onOffReturnCoin();
+                                is_buy(); // 음료수 구매가능한거 ui 업데이트
+                                return_coin(); // 반환가능한지 업데이트
+                                is_input_1000(); // 천언을 3개 넣었는지 확인
+                                output.setText(item2_name);
+                            }
+                        }
+                        else if(check.equals(item3_name)) {
+                            if(!sports_drink_stock.isEmpty()) {
+                                sports_drink_stock.poll();
+                                total_coins -= item3_price;
+                                update_input_coin(); // 돈 삽입한거 ui 업데이트
+                                onOffReturnCoin();
+                                is_buy(); // 음료수 구매가능한거 ui 업데이트
+                                return_coin(); // 반환가능한지 업데이트
+                                is_input_1000(); // 천언을 3개 넣었는지 확인
+                                output.setText(item3_name);
+                            }
+                        }
+                        else if(check.equals(item4_name)) {
+                            if(!premium_coffee_stock.isEmpty()) {
+                                premium_coffee_stock.poll();
+                                total_coins -= item4_price;
+                                update_input_coin(); // 돈 삽입한거 ui 업데이트
+                                onOffReturnCoin();
+                                is_buy(); // 음료수 구매가능한거 ui 업데이트
+                                return_coin(); // 반환가능한지 업데이트
+                                is_input_1000(); // 천언을 3개 넣었는지 확인
+                                output.setText(item4_name);
+                            }
+                        }
+                        else if(check.equals(item5_name)) {
+                            if(!soda_stock.isEmpty()) {
+                                soda_stock.poll();
+                                total_coins -= item5_price;
+                                update_input_coin(); // 돈 삽입한거 ui 업데이트
+                                onOffReturnCoin();
+                                is_buy(); // 음료수 구매가능한거 ui 업데이트
+                                return_coin(); // 반환가능한지 업데이트
+                                is_input_1000(); // 천언을 3개 넣었는지 확인
+                                output.setText(item5_name);
+                            }
+                        }
                     }
                 }
 
@@ -527,6 +580,26 @@ public class Controller implements Initializable {
                     else if(message.equals(item1_name)) {
                         dataOutputStream.writeUTF("data");
                         dataOutputStream.writeUTF(item1_name);
+                        dataOutputStream.flush();
+                    }
+                    else if(message.equals(item2_name)) {
+                        dataOutputStream.writeUTF("data");
+                        dataOutputStream.writeUTF(item2_name);
+                        dataOutputStream.flush();
+                    }
+                    else if(message.equals(item3_name)) {
+                        dataOutputStream.writeUTF("data");
+                        dataOutputStream.writeUTF(item3_name);
+                        dataOutputStream.flush();
+                    }
+                    else if(message.equals(item4_name)) {
+                        dataOutputStream.writeUTF("data");
+                        dataOutputStream.writeUTF(item4_name);
+                        dataOutputStream.flush();
+                    }
+                    else if(message.equals(item5_name)) {
+                        dataOutputStream.writeUTF("data");
+                        dataOutputStream.writeUTF(item5_name);
                         dataOutputStream.flush();
                     }
                 } catch (IOException e) {
