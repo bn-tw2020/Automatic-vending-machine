@@ -1,24 +1,27 @@
 package machine.controller;
 
 import javafx.event.ActionEvent;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-
-import java.net.URL;
-import java.util.ResourceBundle;
+import javafx.scene.control.TextField;
 
 public class LoginController{
 
-//    public Button login;
-//    public Button signup;
-//    public Button back;
-//
-//    @Override
-//    public void initialize(URL location, ResourceBundle resources) {
-//
-//    }
-//
-    public void login_btn(ActionEvent event) { }
-    public void back_btn(ActionEvent event){ }
-    public void signup_btn(ActionEvent event) { }
+    public TextField id_box;
+    public TextField pw_box;
+    public Button login;
+    public Button signup;
+    public Button back;
+
+    @FXML
+    public void loginBtn(ActionEvent event) { }
+    @FXML
+    public void backBtn(ActionEvent event){
+        MainController.exit_stage(signup);
+    }
+    @FXML
+    public void signupBtn(ActionEvent event) {
+        MainController.exit_stage(signup);
+        MainController.new_stage("signupUI", "Sign up");
+    }
 }

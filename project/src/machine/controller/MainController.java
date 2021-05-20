@@ -42,16 +42,6 @@ public class MainController implements Initializable {
     //    HashMap<String, Integer> coins;
     ArrayList<Coin> coins = new ArrayList<>();
 
-    /*
-        1. 초기 세팅
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        stage.setOnCloseRequest(event -> send("close"));
-        text_coin.setEditable(false);
-        active_button();
-        startClient();
-    }
 
     // 초기 거스름돈 5개씩
     public void setting_change(int count) {
@@ -432,30 +422,30 @@ public class MainController implements Initializable {
 
     // =====================================================
 
-    // POPUP 띄우기
-//    static public void pop_up(String message) throws Exception {
-//        FXMLLoader loader = new FXMLLoader();
-//        loader.setLocation(Controller.class.getResource("../view/popUp.fxml"));
-//        Parent root= (Parent) loader.load();
-//        Scene scene = new Scene(root);
-//
-//        Popup_Controller pop = loader.getController();
-//        pop.init_pop(message);
-//        Stage stage = new Stage();
-//        stage.setScene(scene);
-//        stage.show();
-//    }
-
     /*
         1. 관리자 로그인
      */
     @FXML
-    public void login_btn(ActionEvent actionEvent) {
-        System.out.println("관리자 모드로 접속합니다.");
-        exit_stage(log_in);
+    public void loginBtn(ActionEvent actionEvent) {
+//        exit_stage(log_in);
         new_stage("loginUI", "login");
     }
 
+
+    // POPUP 띄우기
+    static public void pop_up(String message) throws Exception {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainController.class.getResource("../view/popup.fxml"));
+        Parent root= (Parent) loader.load();
+        Scene scene = new Scene(root);
+
+        PopUpController pop = loader.getController();
+        pop.init(message);
+        Stage stage = new Stage();
+        stage.setTitle("경고");
+        stage.setScene(scene);
+        stage.show();
+    }
 
     // 공용 함수
     static public void exit_stage(Button btn) {
@@ -467,22 +457,27 @@ public class MainController implements Initializable {
     static public void new_stage(String name, String title) {
         try{
             FXMLLoader fxmlLoader = new FXMLLoader(MainController.class.getResource("../view/" + name + ".fxml"));
-            Parent root = (Parent) fxmlLoader.load();
+            Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             stage.setTitle(title);
             stage.setScene(new Scene(root));
             stage.setResizable(false);
             stage.show();
         }catch (Exception e) {
-            System.err.println(e.getMessage());
             e.printStackTrace();
         }
     }
+
+    // 파일로 관리자 데이터 저장하기
+    static public void writeFile(String filename, String message) {
+
+    }
+
+
+
     /*
         1. 소켓 통신
      */
-
-
     public void startClient(){
         // 연결 시작 코드
         Thread thread = new Thread(){
@@ -655,6 +650,17 @@ public class MainController implements Initializable {
             }
         };
         thread.start();
+    }
+
+    /*
+        1. 초기 세팅
+     */
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        stage.setOnCloseRequest(event -> send("close"));
+        text_coin.setEditable(false);
+        active_button();
+        startClient();
     }
 
 }
