@@ -21,6 +21,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Controller implements Initializable {
+    @FXML public Button fixA;
+    @FXML public Button fixB;
     ExecutorService executorService;
     ServerSocket serverSocket;
     List<Client> connections = new Vector<Client>(); // 스레드에 안전함
@@ -55,8 +57,8 @@ public class Controller implements Initializable {
                 });
                 while (true) {
                     try {
-                        Socket socket = serverSocket.accept(); // 연결 수락
                         while(connections.size() >= 2) {}
+                        Socket socket = serverSocket.accept(); // 연결 수락
                         String message = "[연결 수락 : " + socket.getRemoteSocketAddress() + ": " + Thread.currentThread().getName() + "]";
                         Platform.runLater(() -> displayText(message));
                         Client client = new Client(socket);
@@ -101,19 +103,21 @@ public class Controller implements Initializable {
         public String check = null;
         TreeItem<Item> item1, item2, item3, item4, item5, root;
         Boolean flag = false;
+        String vending = "";
         Client(Socket socket) {
             this.socket = socket;
-            item1 = new TreeItem<>(new Item("물", "450", "5", "0"));
-            item2 = new TreeItem<>(new Item("커피", "500", "5", "0"));
-            item3 = new TreeItem<>(new Item("이온음료", "550", "5", "0"));
-            item4 = new TreeItem<>(new Item("프리미엄 커피", "700", "5", "0"));
-            item5 = new TreeItem<>(new Item("탄산 음료", "750", "5", "0"));
+            item1 = new TreeItem<>(new Item("물", "450", "3", "0"));
+            item2 = new TreeItem<>(new Item("커피", "500", "3", "0"));
+            item3 = new TreeItem<>(new Item("이온음료", "550", "3", "0"));
+            item4 = new TreeItem<>(new Item("프리미엄 커피", "700", "3", "0"));
+            item5 = new TreeItem<>(new Item("탄산 음료", "750", "3", "0"));
             root = new TreeItem<>(new Item("Name", "0", "0", "0"));
             root.getChildren().setAll(item1, item2, item3, item4, item5);
 
             Platform.runLater(()-> {
                 if(tableView.getRoot() == null) {
                     flag = true;
+                    vending = "A";
                     name.setCellValueFactory(param -> param.getValue().getValue().namePropertyProperty());
                     price.setCellValueFactory(param -> param.getValue().getValue().pricePropertyProperty());
                     stock.setCellValueFactory(param -> param.getValue().getValue().stockPropertyProperty());
@@ -145,6 +149,7 @@ public class Controller implements Initializable {
                     tableView.setShowRoot(false);
                 }
                 else if(tableView1.getRoot() == null) {
+                    vending = "B";
                     name1.setCellValueFactory(param -> param.getValue().getValue().namePropertyProperty());
                     price1.setCellValueFactory(param -> param.getValue().getValue().pricePropertyProperty());
                     stock1.setCellValueFactory(param -> param.getValue().getValue().stockPropertyProperty());
@@ -187,7 +192,6 @@ public class Controller implements Initializable {
                 public void run() {
                     try {
                         while (true) {
-
                             InputStream inputStream = socket.getInputStream();
                             DataInputStream dataInputStream = new DataInputStream(inputStream);
                             String meta = null;
@@ -210,23 +214,148 @@ public class Controller implements Initializable {
                                     check = dataInputStream.readUTF();
                                     // 구매 처리하기
                                     if(item1.getValue().getNameProperty().equals(check)) { // 물 구매
-                                        total_coins += Integer.parseInt(item1.getValue().getPriceProperty());
+                                        if(vending.equals("A")) {
+                                            Platform.runLater(()-> {
+                                                String name = tableView.getTreeItem(0).getValue().getNameProperty();
+                                                int price = Integer.parseInt(tableView.getTreeItem(0).getValue().getPriceProperty());
+                                                int current = Integer.parseInt(tableView.getTreeItem(0).getValue().getCurrentProperty());
+                                                int stock = Integer.parseInt(tableView.getTreeItem(0).getValue().getStockProperty());
+                                                total_coins += price;
+                                                tableView.getTreeItem(0).getValue().setStockProperty(String.valueOf(stock - 1));
+                                                tableView.getTreeItem(0).getValue().setCurrentProperty(String.valueOf(current + 1));
+                                                item1.getValue().setStockProperty(String.valueOf(stock - 1));
+                                                item1.getValue().setCurrentProperty(String.valueOf(current + 1));
+                                            });
+                                        }
+                                        else if(vending.equals("B")) {
+                                            Platform.runLater(()-> {
+                                                String name = tableView1.getTreeItem(0).getValue().getNameProperty();
+                                                int price = Integer.parseInt(tableView1.getTreeItem(0).getValue().getPriceProperty());
+                                                int current = Integer.parseInt(tableView1.getTreeItem(0).getValue().getCurrentProperty());
+                                                int stock = Integer.parseInt(tableView1.getTreeItem(0).getValue().getStockProperty());
+                                                total_coins += price;
+                                                tableView1.getTreeItem(0).getValue().setStockProperty(String.valueOf(stock - 1));
+                                                tableView1.getTreeItem(0).getValue().setCurrentProperty(String.valueOf(current + 1));
+                                                item1.getValue().setStockProperty(String.valueOf(stock - 1));
+                                                item1.getValue().setCurrentProperty(String.valueOf(current + 1));
+                                            });
+                                        }
                                         send("success");
                                     }
                                     else if(item2.getValue().getNameProperty().equals(check)) {
-                                        total_coins += Integer.parseInt(item2.getValue().getPriceProperty());
+                                        if(vending.equals("A")) {
+                                            Platform.runLater(()-> {
+                                                String name = tableView.getTreeItem(1).getValue().getNameProperty();
+                                                int price = Integer.parseInt(tableView.getTreeItem(1).getValue().getPriceProperty());
+                                                int current = Integer.parseInt(tableView.getTreeItem(1).getValue().getCurrentProperty());
+                                                int stock = Integer.parseInt(tableView.getTreeItem(1).getValue().getStockProperty());
+                                                total_coins += price;
+                                                tableView.getTreeItem(1).getValue().setStockProperty(String.valueOf(stock - 1));
+                                                tableView.getTreeItem(1).getValue().setCurrentProperty(String.valueOf(current + 1));
+                                                item2.getValue().setStockProperty(String.valueOf(stock - 1));
+                                                item2.getValue().setCurrentProperty(String.valueOf(current + 1));
+                                            });
+                                        }
+                                        else if(vending.equals("B")) {
+                                            Platform.runLater(()-> {
+                                                String name = tableView1.getTreeItem(1).getValue().getNameProperty();
+                                                int price = Integer.parseInt(tableView1.getTreeItem(1).getValue().getPriceProperty());
+                                                int current = Integer.parseInt(tableView1.getTreeItem(1).getValue().getCurrentProperty());
+                                                int stock = Integer.parseInt(tableView1.getTreeItem(1).getValue().getStockProperty());
+                                                total_coins += price;
+                                                tableView1.getTreeItem(1).getValue().setStockProperty(String.valueOf(stock - 1));
+                                                tableView1.getTreeItem(1).getValue().setCurrentProperty(String.valueOf(current + 1));
+                                                item2.getValue().setStockProperty(String.valueOf(stock - 1));
+                                                item2.getValue().setCurrentProperty(String.valueOf(current + 1));
+                                            });
+                                        }
                                         send("success");
                                     }
                                     else if(item3.getValue().getNameProperty().equals(check)) {
-                                        total_coins += Integer.parseInt(item3.getValue().getPriceProperty());
+                                        if(vending.equals("A")) {
+                                            Platform.runLater(()-> {
+                                                String name = tableView.getTreeItem(2).getValue().getNameProperty();
+                                                int price = Integer.parseInt(tableView.getTreeItem(2).getValue().getPriceProperty());
+                                                int current = Integer.parseInt(tableView.getTreeItem(2).getValue().getCurrentProperty());
+                                                int stock = Integer.parseInt(tableView.getTreeItem(2).getValue().getStockProperty());
+                                                total_coins += price;
+                                                tableView.getTreeItem(2).getValue().setStockProperty(String.valueOf(stock - 1));
+                                                tableView.getTreeItem(2).getValue().setCurrentProperty(String.valueOf(current + 1));
+                                                item3.getValue().setStockProperty(String.valueOf(stock - 1));
+                                                item3.getValue().setCurrentProperty(String.valueOf(current + 1));
+                                            });
+                                        }
+                                        else if(vending.equals("B")) {
+                                            Platform.runLater(()-> {
+                                                String name = tableView1.getTreeItem(2).getValue().getNameProperty();
+                                                int price = Integer.parseInt(tableView1.getTreeItem(2).getValue().getPriceProperty());
+                                                int current = Integer.parseInt(tableView1.getTreeItem(2).getValue().getCurrentProperty());
+                                                int stock = Integer.parseInt(tableView1.getTreeItem(2).getValue().getStockProperty());
+                                                total_coins += price;
+                                                tableView1.getTreeItem(2).getValue().setStockProperty(String.valueOf(stock - 1));
+                                                tableView1.getTreeItem(2).getValue().setCurrentProperty(String.valueOf(current + 1));
+                                                item3.getValue().setStockProperty(String.valueOf(stock - 1));
+                                                item3.getValue().setCurrentProperty(String.valueOf(current + 1));
+                                            });
+                                        }
                                         send("success");
                                     }
                                     else if(item4.getValue().getNameProperty().equals(check)) {
-                                        total_coins += Integer.parseInt(item4.getValue().getPriceProperty());
+                                        if(vending.equals("A")) {
+                                            Platform.runLater(()-> {
+                                                String name = tableView.getTreeItem(3).getValue().getNameProperty();
+                                                int price = Integer.parseInt(tableView.getTreeItem(3).getValue().getPriceProperty());
+                                                int current = Integer.parseInt(tableView.getTreeItem(3).getValue().getCurrentProperty());
+                                                int stock = Integer.parseInt(tableView.getTreeItem(3).getValue().getStockProperty());
+                                                total_coins += price;
+                                                tableView.getTreeItem(3).getValue().setStockProperty(String.valueOf(stock - 1));
+                                                tableView.getTreeItem(3).getValue().setCurrentProperty(String.valueOf(current + 1));
+                                                item4.getValue().setStockProperty(String.valueOf(stock - 1));
+                                                item4.getValue().setCurrentProperty(String.valueOf(current + 1));
+                                            });
+                                        }
+                                        else if(vending.equals("B")) {
+                                            Platform.runLater(()-> {
+                                                String name = tableView1.getTreeItem(3).getValue().getNameProperty();
+                                                int price = Integer.parseInt(tableView1.getTreeItem(3).getValue().getPriceProperty());
+                                                int current = Integer.parseInt(tableView1.getTreeItem(3).getValue().getCurrentProperty());
+                                                int stock = Integer.parseInt(tableView1.getTreeItem(3).getValue().getStockProperty());
+                                                total_coins += price;
+                                                tableView1.getTreeItem(3).getValue().setStockProperty(String.valueOf(stock - 1));
+                                                tableView1.getTreeItem(3).getValue().setCurrentProperty(String.valueOf(current + 1));
+                                                item4.getValue().setStockProperty(String.valueOf(stock - 1));
+                                                item4.getValue().setCurrentProperty(String.valueOf(current + 1));
+                                            });
+                                        }
                                         send("success");
                                     }
                                     else if(item5.getValue().getNameProperty().equals(check)) {
-                                        total_coins += Integer.parseInt(item5.getValue().getPriceProperty());
+                                        if(vending.equals("A")) {
+                                            Platform.runLater(()-> {
+                                                String name = tableView.getTreeItem(4).getValue().getNameProperty();
+                                                int price = Integer.parseInt(tableView.getTreeItem(4).getValue().getPriceProperty());
+                                                int current = Integer.parseInt(tableView.getTreeItem(4).getValue().getCurrentProperty());
+                                                int stock = Integer.parseInt(tableView.getTreeItem(4).getValue().getStockProperty());
+                                                total_coins += price;
+                                                tableView.getTreeItem(4).getValue().setStockProperty(String.valueOf(stock - 1));
+                                                tableView.getTreeItem(4).getValue().setCurrentProperty(String.valueOf(current + 1));
+                                                item5.getValue().setStockProperty(String.valueOf(stock - 1));
+                                                item5.getValue().setCurrentProperty(String.valueOf(current + 1));
+                                            });
+                                        }
+                                        else if(vending.equals("B")) {
+                                            Platform.runLater(()-> {
+                                                String name = tableView1.getTreeItem(4).getValue().getNameProperty();
+                                                int price = Integer.parseInt(tableView1.getTreeItem(4).getValue().getPriceProperty());
+                                                int current = Integer.parseInt(tableView1.getTreeItem(4).getValue().getCurrentProperty());
+                                                int stock = Integer.parseInt(tableView1.getTreeItem(4).getValue().getStockProperty());
+                                                total_coins += price;
+                                                tableView1.getTreeItem(4).getValue().setStockProperty(String.valueOf(stock - 1));
+                                                tableView1.getTreeItem(4).getValue().setCurrentProperty(String.valueOf(current + 1));
+                                                item5.getValue().setStockProperty(String.valueOf(stock - 1));
+                                                item5.getValue().setCurrentProperty(String.valueOf(current + 1));
+                                            });
+                                        }
                                         send("success");
                                     }
                                 }
@@ -256,7 +385,6 @@ public class Controller implements Initializable {
                         DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
 
                         if (message.equals("init")) {
-                            Platform.runLater(()->makeTable(connections.size()));
                             dataOutputStream.writeUTF("init");
                             dataOutputStream.writeInt(5);
                             dataOutputStream.writeInt(3);
@@ -272,31 +400,31 @@ public class Controller implements Initializable {
                                 dataOutputStream.writeUTF("success");
                                 dataOutputStream.writeUTF(check);
                                 dataOutputStream.flush();
-                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + connections.indexOf(Client.this) + " : " + check + " " + item1.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
+                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + vending + " : " + check + " " + item1.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
                             }
                             else if(item2.getValue().getNameProperty().equals(check)) { // 커피 성공
                                 dataOutputStream.writeUTF("success");
                                 dataOutputStream.writeUTF(check);
                                 dataOutputStream.flush();
-                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + connections.indexOf(Client.this) + " : " + check + " " + item2.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
+                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + vending + " : " + check + " " + item2.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
                             }
                             else if(item3.getValue().getNameProperty().equals(check)) { // 이온 성공
                                 dataOutputStream.writeUTF("success");
                                 dataOutputStream.writeUTF(check);
                                 dataOutputStream.flush();
-                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + connections.indexOf(Client.this) + " : " + check + " " + item3.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
+                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + vending + " : " + check + " " + item3.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
                             }
                             else if(item4.getValue().getNameProperty().equals(check)) { // 비싼커피 성공
                                 dataOutputStream.writeUTF("success");
                                 dataOutputStream.writeUTF(check);
                                 dataOutputStream.flush();
-                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + connections.indexOf(Client.this) + " : " + check + " " + item4.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
+                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + vending + " : " + check + " " + item4.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
                             }
                             else if(item5.getValue().getNameProperty().equals(check)) { // 소다 성공
                                 dataOutputStream.writeUTF("success");
                                 dataOutputStream.writeUTF(check);
                                 dataOutputStream.flush();
-                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + connections.indexOf(Client.this) + " : " + check + " " + item5.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
+                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + vending + " : " + check + " " + item5.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
                             }
                         }
 
@@ -319,9 +447,4 @@ public class Controller implements Initializable {
         txtDisplay.appendText(text + "\n");
     }
 
-    void makeTable(int size) {
-        if(size == 0) { }
-        else if(size == 1) {}
-        else if(size == 2) {}
-    }
 }

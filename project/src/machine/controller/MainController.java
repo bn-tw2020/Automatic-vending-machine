@@ -4,10 +4,12 @@ import Server.model.StageStore;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import machine.model.Beverage;
 import machine.model.Coin;
@@ -19,7 +21,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class Controller implements Initializable {
+public class MainController implements Initializable {
     Socket socket;
     private final Stage stage = StageStore.stage;
     // 음료수 버튼, 동전 넣는 버튼, 반환 버튼, 관리자 로그인 버튼
@@ -430,12 +432,55 @@ public class Controller implements Initializable {
 
     // =====================================================
 
+    // POPUP 띄우기
+//    static public void pop_up(String message) throws Exception {
+//        FXMLLoader loader = new FXMLLoader();
+//        loader.setLocation(Controller.class.getResource("../view/popUp.fxml"));
+//        Parent root= (Parent) loader.load();
+//        Scene scene = new Scene(root);
+//
+//        Popup_Controller pop = loader.getController();
+//        pop.init_pop(message);
+//        Stage stage = new Stage();
+//        stage.setScene(scene);
+//        stage.show();
+//    }
 
     /*
         1. 관리자 로그인
      */
+    @FXML
     public void login_btn(ActionEvent actionEvent) {
+        System.out.println("관리자 모드로 접속합니다.");
+        exit_stage(log_in);
+        new_stage("loginUI", "login");
     }
+
+
+    // 공용 함수
+    static public void exit_stage(Button btn) {
+        Stage stage = (Stage)btn.getScene().getWindow();
+        stage.close();
+    }
+
+    // 1. 새로운 화면 띄우기
+    static public void new_stage(String name, String title) {
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader(MainController.class.getResource("../view/" + name + ".fxml"));
+            Parent root = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle(title);
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+            stage.show();
+        }catch (Exception e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    /*
+        1. 소켓 통신
+     */
 
 
     public void startClient(){

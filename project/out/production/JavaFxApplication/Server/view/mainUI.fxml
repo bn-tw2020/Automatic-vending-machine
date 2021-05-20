@@ -37,12 +37,12 @@
             <TreeTableColumn fx:id="current1" prefWidth="48.0" text="현황" />
          </columns>
       </TreeTableView>
+        <Button fx:id="fixA" layoutX="207.0" layoutY="22.0" mnemonicParsing="false" text="1번 수정" />
+        <Button fx:id="fixB" layoutX="205.0" layoutY="259.0" mnemonicParsing="false" text="2번 수정" />
     </Pane>
     <Pane prefHeight="500.0" prefWidth="491.0">
-        <TextArea fx:id="txtDisplay" layoutX="103.0" layoutY="79.0" prefHeight="407.0" prefWidth="374.0" />
-        <Button layoutX="7.0" layoutY="50.0" mnemonicParsing="false" text="1번 수정" />
-        <Button layoutX="8.0" layoutY="286.0" mnemonicParsing="false" text="2번 수정" />
-        <Text layoutX="103.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="log" wrappingWidth="124.109375">
+        <TextArea fx:id="txtDisplay" layoutX="7.0" layoutY="48.0" prefHeight="438.0" prefWidth="470.0" />
+        <Text layoutX="14.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="log" wrappingWidth="124.109375">
             <font>
                 <Font name="Bauhaus 93" size="20.0" />
             </font>
