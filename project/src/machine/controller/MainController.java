@@ -470,7 +470,19 @@ public class MainController implements Initializable {
 
     // 파일로 관리자 데이터 저장하기
     static public void writeFile(String filename, String message) {
+        String filePath = Objects.requireNonNull(MainController.class.getResource("")).getPath() + "../data/" + filename;
+        File file = new File(filePath);
 
+        try {
+            FileWriter fileWriter = new FileWriter(file, true);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+            bufferedWriter.write(message);
+            bufferedWriter.newLine();
+            bufferedWriter.flush();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

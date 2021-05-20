@@ -1,5 +1,6 @@
 package machine.controller;
 
+import Server.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -29,12 +30,17 @@ public class SignUpController implements Initializable {
         String ID;
 
         String inputID = id.getText();
+        String inputPW = pw.getText();
         try {
             FileReader fileReader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
             if (inputID.isEmpty()) {
                 MainController.pop_up("아이디를 입력하세요");
+                return;
+            }
+            if (inputPW.isEmpty()) {
+                MainController.pop_up("비밀번호를 입력하세요");
                 return;
             }
             while ((user = bufferedReader.readLine()) != null) {
@@ -52,19 +58,23 @@ public class SignUpController implements Initializable {
         }
     }
 
-    public void signupBtn(ActionEvent actionEvent) {
+    public void signupBtn(ActionEvent actionEvent) throws Exception {
         String ID = id.getText();
         String PW = pw.getText();
 
         if (check(PW)) {
-
+            MainController.writeFile("user.txt", ID + " " + PW);
+            MainController.exit_stage(signup);
+            MainController.new_stage("loginUI", "login");
         } else {
-
+            MainController.pop_up("사용 할 수 없는 비밀번호입니다.");
+            pw.setText("");
+            pw.setStyle("-fx-border-color: #000000;");
         }
     }
 
     private boolean check(String password) {
-        Pattern pattern = Pattern.compile("([a-zA-Z0-9)].*[!,@,#,$,%,^,&,*,?,_,~]) | ([!,@,#,$,%,^,&,*,?,_,~].*[a-zA-Z0-9])");
+        Pattern pattern = Pattern.compile("([a-zA-Z0-9].*[!,@,#,$,%,^,&,*,?,_,~])|([!,@,#,$,%,^,&,*,?,_,~].*[a-zA-Z0-9])");
         Matcher matcher = pattern.matcher(password);
 
         return matcher.find() && (password.length() >= 8);

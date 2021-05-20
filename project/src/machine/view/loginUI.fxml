@@ -16,8 +16,8 @@
                 <Font name="Bauhaus 93" size="34.0"/>
             </font>
         </Label>
-        <TextField fx:id="id_box" layoutX="229.0" layoutY="129.0"/>
-        <TextField fx:id="pw_box" layoutX="229.0" layoutY="187.0"/>
+        <TextField fx:id="id" layoutX="229.0" layoutY="129.0"/>
+        <TextField fx:id="pw" layoutX="229.0" layoutY="187.0"/>
         <Label layoutX="117.0" layoutY="120.0" text="ID">
             <font>
                 <Font name="Bauhaus 93" size="34.0"/>
