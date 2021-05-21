@@ -37,8 +37,8 @@
             <TreeTableColumn fx:id="current1" prefWidth="48.0" text="현황" />
          </columns>
       </TreeTableView>
-        <Button fx:id="fixA" layoutX="207.0" layoutY="22.0" mnemonicParsing="false" text="1번 수정" />
-        <Button fx:id="fixB" layoutX="205.0" layoutY="259.0" mnemonicParsing="false" text="2번 수정" />
+        <Button onAction="#fix" layoutX="207.0" layoutY="22.0" mnemonicParsing="false" text="1번 수정" />
+        <Button onAction="#fix" layoutX="205.0" layoutY="259.0" mnemonicParsing="false" text="2번 수정" />
     </Pane>
     <Pane prefHeight="500.0" prefWidth="491.0">
         <TextArea fx:id="txtDisplay" layoutX="7.0" layoutY="48.0" prefHeight="438.0" prefWidth="470.0" />

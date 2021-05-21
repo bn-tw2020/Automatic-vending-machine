@@ -73,7 +73,7 @@ public class SignUpController implements Initializable {
         }
     }
 
-    private boolean check(String password) {
+    public static boolean check(String password) {
         Pattern pattern = Pattern.compile("([a-zA-Z0-9].*[!,@,#,$,%,^,&,*,?,_,~])|([!,@,#,$,%,^,&,*,?,_,~].*[a-zA-Z0-9])");
         Matcher matcher = pattern.matcher(password);
 

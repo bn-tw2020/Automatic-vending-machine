@@ -21,26 +21,30 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static machine.controller.AdminController.*;
+
 public class MainController implements Initializable {
-    Socket socket;
+    static Socket socket;
     private final Stage stage = StageStore.stage;
     // 음료수 버튼, 동전 넣는 버튼, 반환 버튼, 관리자 로그인 버튼
     public Button soda, coffee, water, sports_drink, premium_coffee;
     public Button coin_10, coin_50, coin_100, coin_500, coin_1000;
-    public String item1_name, item2_name, item3_name, item4_name, item5_name;
-    public int item1_price, item2_price, item3_price, item4_price, item5_price;
+    public static String item1_name, item2_name, item3_name, item4_name, item5_name;
+    public static int item1_price, item2_price, item3_price, item4_price, item5_price;
+    public static int item1_curr = 0, item2_curr = 0, item3_curr = 0, item4_curr = 0, item5_curr = 0;
+    public static int total = 0;
     public TextField text_coin;
     public Button coin_return;
     public Button log_in;
     public TextField output;
     // 거스름돈
-    Stack<Coin> change_10, change_50, change_100, change_500, change_1000;
+    static Stack<Coin> change_10, change_50, change_100, change_500, change_1000;
     // 음료 재고
-    Queue<Beverage> water_stock, coffee_stock, sports_drink_stock, premium_coffee_stock, soda_stock;
+    static Queue<Beverage> water_stock, coffee_stock, sports_drink_stock, premium_coffee_stock, soda_stock;
     // 전체 들어온 돈
-    int total_coins = 0;
+    static int total_coins = 0;
     //    HashMap<String, Integer> coins;
-    ArrayList<Coin> coins = new ArrayList<>();
+    static ArrayList<Coin> coins = new ArrayList<>();
 
 
     // 초기 거스름돈 5개씩
@@ -98,77 +102,27 @@ public class MainController implements Initializable {
     public void water_Clicked(ActionEvent event) {
         Date current = new Date();
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-        if(!water_stock.isEmpty()) {
-            send(item1_name);
-//            water_stock.poll();
-//            total_coins -= item1_price;
-//            update_input_coin(); // 돈 삽입한거 ui 업데이트
-//            onOffReturnCoin();
-//            is_buy(); // 음료수 구매가능한거 ui 업데이트
-//            return_coin(); // 반환가능한지 업데이트
-//            is_input_1000(); // 천언을 3개 넣었는지 확인
-//            output.setText(item1_name);
-        }
+        if(!water_stock.isEmpty()) send(item1_name);
     }
     public void coffee_Clicked(ActionEvent event) {
         Date current = new Date();
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-        if(!coffee_stock.isEmpty()) {
-            send(item2_name);
-//            coffee_stock.poll();
-//            total_coins -= item2_price;
-//            update_input_coin(); // 돈 삽입한거 ui 업데이트
-//            onOffReturnCoin();
-//            is_buy(); // 음료수 구매가능한거 ui 업데이트
-//            return_coin(); // 반환가능한지 업데이트
-//            is_input_1000(); // 천언을 3개 넣었는지 확인
-//            output.setText(item2_name);
-        }
+        if(!coffee_stock.isEmpty()) send(item2_name);
     }
     public void sports_drink_Clicked(ActionEvent event) {
         Date current = new Date();
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-        if(!sports_drink_stock.isEmpty()) {
-            send(item3_name);
-//            sports_drink_stock.poll();
-//            total_coins -= item3_price;
-//            update_input_coin(); // 돈 삽입한거 ui 업데이트
-//            onOffReturnCoin();
-//            is_buy(); // 음료수 구매가능한거 ui 업데이트
-//            return_coin(); // 반환가능한지 업데이트
-//            is_input_1000(); // 천언을 3개 넣었는지 확인
-//            output.setText(item3_name);
-        }
+        if(!sports_drink_stock.isEmpty()) send(item3_name);
     }
     public void premium_coffee_Clicked(ActionEvent event) {
         Date current = new Date();
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-        if(!premium_coffee_stock.isEmpty()) {
-            send(item4_name);
-//            premium_coffee_stock.poll();
-//            total_coins -= item4_price;
-//            update_input_coin(); // 돈 삽입한거 ui 업데이트
-//            onOffReturnCoin();
-//            is_buy(); // 음료수 구매가능한거 ui 업데이트
-//            return_coin(); // 반환가능한지 업데이트
-//            is_input_1000(); // 천언을 3개 넣었는지 확인
-//            output.setText(item4_name);
-        }
+        if(!premium_coffee_stock.isEmpty()) send(item4_name);
     }
     public void soda_Clicked(ActionEvent event) {
         Date current = new Date();
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-        if(!soda_stock.isEmpty()) {
-            send(item5_name);
-//            soda_stock.poll();
-//            total_coins -= item5_price;
-//            update_input_coin(); // 돈 삽입한거 ui 업데이트
-//            onOffReturnCoin();
-//            is_buy(); // 음료수 구매가능한거 ui 업데이트
-//            return_coin(); // 반환가능한지 업데이트
-//            is_input_1000(); // 천언을 3개 넣었는지 확인
-//            output.setText(item5_name);
-        }
+        if(!soda_stock.isEmpty()) send(item5_name);
     }
 
     /*
@@ -185,7 +139,7 @@ public class MainController implements Initializable {
         output.setText("");
         if (total_coins + 10 > 5000) return;
         coins.add(new Coin(10));
-        change_10.push(new Coin(10));
+//        change_10.push(new Coin(10));
         total_coins += 10;
         update_input_coin(); // 돈 삽입한거 ui 업데이트
         onOffReturnCoin();
@@ -198,7 +152,7 @@ public class MainController implements Initializable {
         output.setText("");
         if (total_coins + 50 > 5000) return;
         coins.add(new Coin(50));
-        change_50.push(new Coin(50));
+//        change_50.push(new Coin(50));
         total_coins += 50;
         update_input_coin(); // 돈 삽입한거 ui 업데이트
         onOffReturnCoin();
@@ -211,7 +165,7 @@ public class MainController implements Initializable {
         output.setText("");
         if (total_coins + 100 > 5000) return;
         coins.add(new Coin(100));
-        change_100.push(new Coin(100));
+//        change_100.push(new Coin(100));
         total_coins += 100;
         update_input_coin(); // 돈 삽입한거 ui 업데이트
         onOffReturnCoin();
@@ -224,7 +178,7 @@ public class MainController implements Initializable {
         output.setText("");
         if (total_coins + 500 > 5000) return;
         coins.add(new Coin(500));
-        change_500.push(new Coin(500));
+//        change_500.push(new Coin(500));
         total_coins += 500;
         update_input_coin(); // 돈 삽입한거 ui 업데이트
         onOffReturnCoin();
@@ -237,7 +191,7 @@ public class MainController implements Initializable {
         output.setText("");
         if (total_coins + 1000 > 5000) return;
         coins.add(new Coin(1000));
-        change_1000.push(new Coin(1000));
+//        change_1000.push(new Coin(1000));
         total_coins += 1000;
         update_input_coin(); // 돈 삽입한거 ui 업데이트
         onOffReturnCoin();
@@ -372,6 +326,34 @@ public class MainController implements Initializable {
         int count_10 = 0; int count_50 = 0; int count_100 = 0; int count_500 = 0; int count_1000 = 0;
         String outputString = "";
 
+//        for(int i = 0; i < coins.size(); i++) {
+//            if(coins.get(i).getValue() == 1000 && !change_1000.isEmpty()) {
+//                coins.remove(i); count_1000++;
+//                total_coins -= 1000;
+//                change_1000.pop();
+//            }
+//            else if(coins.get(i).getValue() == 500 && !change_500.isEmpty()) {
+//                coins.remove(i); count_500++;
+//                total_coins -= 500;
+//                change_500.pop();
+//            }
+//            else if(coins.get(i).getValue() == 100 && !change_100.isEmpty()) {
+//                coins.remove(i); count_100++;
+//                total_coins -= 100;
+//                change_100.pop();
+//            }
+//            else if(coins.get(i).getValue() == 50 && !change_50.isEmpty()) {
+//                coins.remove(i); count_50++;
+//                total_coins -= 50;
+//                change_50.pop();
+//            }
+//            else if(coins.get(i).getValue() == 10 && !change_10.isEmpty()) {
+//                coins.remove(i); count_10++;
+//                total_coins -= 10;
+//                change_10.pop();
+//            }
+//        }
+
         while(total_coins >= 0) {
             if(total_coins - 1000 >= 0 && !change_1000.isEmpty()) {
                 count_1000++; total_coins -= 1000; change_1000.pop();
@@ -397,19 +379,14 @@ public class MainController implements Initializable {
             return;
         }
 
-        System.out.println(total_coins);
-        System.out.println(count_1000 + " " + count_500 + " " + count_100 + " " + count_50 + " " + count_10);
         if(count_1000 > 0) outputString += "1000원 : " + count_1000 + "개 ";
         if(count_500 > 0) outputString += "500원 : " + count_500 + "개 ";
         if(count_100 > 0) outputString += "100원 : " + count_100 + "개 ";
         if(count_50 > 0) outputString += "50원 : " + count_50 + "개 ";
         if(count_10 > 0) outputString += "10원 : " + count_10 + "개 ";
-        System.out.println(outputString);
-        System.out.println("1000원 남은 갯수 : " + change_1000.size());
-        System.out.println("500원 남은 갯수 : " + change_500.size());
-        System.out.println("100원 남은 갯수 : " + change_100.size());
-        System.out.println("50원 남은 갯수 : " + change_50.size());
-        System.out.println("10원 남은 갯수 : " + change_10.size());
+
+        System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
+
         output.setText(outputString.trim());
         text_coin.setText(Integer.toString(total_coins));
         coins.clear(); // 어떤 돈이 들어있는지에 대한 초기화
@@ -426,10 +403,7 @@ public class MainController implements Initializable {
         1. 관리자 로그인
      */
     @FXML
-    public void loginBtn(ActionEvent actionEvent) {
-//        exit_stage(log_in);
-        new_stage("loginUI", "login");
-    }
+    public void loginBtn(ActionEvent actionEvent) { new_stage("loginUI", "login"); }
 
 
     // POPUP 띄우기
@@ -474,7 +448,7 @@ public class MainController implements Initializable {
         File file = new File(filePath);
 
         try {
-            FileWriter fileWriter = new FileWriter(file, true);
+            FileWriter fileWriter = new FileWriter(file, false);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
             bufferedWriter.write(message);
@@ -510,7 +484,7 @@ public class MainController implements Initializable {
         thread.start();
     }
 
-    public void stopClient(){
+    public static void stopClient(){
         // 연결 끊기 코드
         try{
             Platform.runLater(()->{ System.out.println("연결 끊음"); });
@@ -540,8 +514,9 @@ public class MainController implements Initializable {
                         item4_name = dataInputStream.readUTF(); item4_price = dataInputStream.readInt();
                         item5_name = dataInputStream.readUTF(); item5_price = dataInputStream.readInt();
                         Platform.runLater(()-> { // sports_drink, premium_coffee;
-                            water.setText(item1_name); coffee.setText(item2_name); sports_drink.setText(item3_name);
-                            premium_coffee.setText(item4_name); soda.setText(item5_name);
+                            water.setText(String.valueOf(item1_price)); coffee.setText(String.valueOf(item2_price)); sports_drink.setText(String.valueOf(item3_price));
+                            premium_coffee.setText(String.valueOf(item4_price)); soda.setText(String.valueOf(item5_price));
+                            System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
                         });
                     }
                     else if(meta.startsWith("success")) {
@@ -550,29 +525,41 @@ public class MainController implements Initializable {
                             if(!water_stock.isEmpty()) {
                                 water_stock.poll();
                                 total_coins -= item1_price;
+//                                for(int i = 0; i < coins.size(); i++) if(coins.get(i).getValue() == item1_price) coins.remove(i);
+                                item1_curr += 1; total += item1_price;
                                 update_input_coin(); // 돈 삽입한거 ui 업데이트
                                 onOffReturnCoin();
                                 is_buy(); // 음료수 구매가능한거 ui 업데이트
                                 return_coin(); // 반환가능한지 업데이트
                                 is_input_1000(); // 천언을 3개 넣었는지 확인
                                 output.setText(item1_name);
+                                Platform.runLater(()-> {
+                                    System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
+                                });
                             }
                         }
                         else if(check.equals(item2_name)) {
                             if(!coffee_stock.isEmpty()) {
                                 coffee_stock.poll();
                                 total_coins -= item2_price;
+//                                for(int i = 0; i < coins.size(); i++) if(coins.get(i).getValue() == item2_price) coins.remove(i);
+                                item2_curr += 1;  total += item2_price;
                                 update_input_coin(); // 돈 삽입한거 ui 업데이트
                                 onOffReturnCoin();
                                 is_buy(); // 음료수 구매가능한거 ui 업데이트
                                 return_coin(); // 반환가능한지 업데이트
                                 is_input_1000(); // 천언을 3개 넣었는지 확인
                                 output.setText(item2_name);
+                                Platform.runLater(()-> {
+                                    System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
+                                });
                             }
                         }
                         else if(check.equals(item3_name)) {
                             if(!sports_drink_stock.isEmpty()) {
                                 sports_drink_stock.poll();
+                                item3_curr += 1;  total += item3_price;
+//                                for(int i = 0; i < coins.size(); i++) if(coins.get(i).getValue() == item3_price) coins.remove(i);
                                 total_coins -= item3_price;
                                 update_input_coin(); // 돈 삽입한거 ui 업데이트
                                 onOffReturnCoin();
@@ -580,11 +567,16 @@ public class MainController implements Initializable {
                                 return_coin(); // 반환가능한지 업데이트
                                 is_input_1000(); // 천언을 3개 넣었는지 확인
                                 output.setText(item3_name);
+                                Platform.runLater(()-> {
+                                    System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
+                                });
                             }
                         }
                         else if(check.equals(item4_name)) {
                             if(!premium_coffee_stock.isEmpty()) {
                                 premium_coffee_stock.poll();
+                                item4_curr += 1; total += item4_price;
+//                                for(int i = 0; i < coins.size(); i++) if(coins.get(i).getValue() == item4_price) coins.remove(i);
                                 total_coins -= item4_price;
                                 update_input_coin(); // 돈 삽입한거 ui 업데이트
                                 onOffReturnCoin();
@@ -592,20 +584,52 @@ public class MainController implements Initializable {
                                 return_coin(); // 반환가능한지 업데이트
                                 is_input_1000(); // 천언을 3개 넣었는지 확인
                                 output.setText(item4_name);
+                                Platform.runLater(()-> {
+                                    System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
+                                });
                             }
                         }
                         else if(check.equals(item5_name)) {
                             if(!soda_stock.isEmpty()) {
                                 soda_stock.poll();
                                 total_coins -= item5_price;
+//                                for(int i = 0; i < coins.size(); i++) if(coins.get(i).getValue() == item5_price) coins.remove(i);
+                                item5_curr += 1;  total += item5_price;
                                 update_input_coin(); // 돈 삽입한거 ui 업데이트
                                 onOffReturnCoin();
                                 is_buy(); // 음료수 구매가능한거 ui 업데이트
                                 return_coin(); // 반환가능한지 업데이트
                                 is_input_1000(); // 천언을 3개 넣었는지 확인
                                 output.setText(item5_name);
+                                Platform.runLater(()-> {
+                                    System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
+                                });
                             }
                         }
+                    }
+                    else if(meta.startsWith("change_item")) {
+                        item1_name = dataInputStream.readUTF(); item1_price = Integer.parseInt(dataInputStream.readUTF());
+                        item1_stock = dataInputStream.readUTF(); item1_curr = Integer.parseInt(dataInputStream.readUTF());
+                        item2_name = dataInputStream.readUTF(); item2_price = Integer.parseInt(dataInputStream.readUTF());
+                        item2_stock = dataInputStream.readUTF(); item2_curr = Integer.parseInt(dataInputStream.readUTF());
+                        item3_name = dataInputStream.readUTF(); item3_price = Integer.parseInt(dataInputStream.readUTF());
+                        item3_stock = dataInputStream.readUTF(); item3_curr = Integer.parseInt(dataInputStream.readUTF());
+                        item4_name = dataInputStream.readUTF(); item4_price = Integer.parseInt(dataInputStream.readUTF());
+                        item4_stock = dataInputStream.readUTF(); item4_curr = Integer.parseInt(dataInputStream.readUTF());
+                        item5_name = dataInputStream.readUTF(); item5_price = Integer.parseInt(dataInputStream.readUTF());
+                        item5_stock = dataInputStream.readUTF(); item5_curr = Integer.parseInt(dataInputStream.readUTF());
+                        Platform.runLater(()-> { // sports_drink, premium_coffee;
+                            water.setText(String.valueOf(item1_price)); coffee.setText(String.valueOf(item2_price)); sports_drink.setText(String.valueOf(item3_price));
+                            premium_coffee.setText(String.valueOf(item4_price)); soda.setText(String.valueOf(item5_price));
+
+                            water_stock.clear(); coffee_stock.clear(); sports_drink_stock.clear(); premium_coffee_stock.clear(); soda_stock.clear();
+                            for (int i = 0; i < Integer.parseInt(item1_stock); i++) water_stock.add(new Beverage(item1_name, item1_price));
+                            for (int i = 0; i < Integer.parseInt(item2_stock); i++) coffee_stock.add(new Beverage(item2_name, item2_price));
+                            for (int i = 0; i < Integer.parseInt(item3_stock); i++) sports_drink_stock.add(new Beverage(item3_name, item3_price));
+                            for (int i = 0; i < Integer.parseInt(item4_stock); i++) premium_coffee_stock.add(new Beverage(item4_name, item4_price));
+                            for (int i = 0; i < Integer.parseInt(item5_stock); i++) soda_stock.add(new Beverage(item5_name, item5_price));
+                        });
+
                     }
                 }
 
@@ -617,7 +641,7 @@ public class MainController implements Initializable {
         }
     }
 
-    void send(String message){
+    static void send(String message){
         // 데이터 전송 코드
         Thread thread = new Thread(){
             @Override
@@ -652,6 +676,25 @@ public class MainController implements Initializable {
                     else if(message.equals(item5_name)) {
                         dataOutputStream.writeUTF("data");
                         dataOutputStream.writeUTF(item5_name);
+                        dataOutputStream.flush();
+                    }
+                    else if(message.equals("change")) {
+                        dataOutputStream.writeUTF("change");
+                        dataOutputStream.writeUTF(item1_name); dataOutputStream.writeInt(item1_price);
+                        dataOutputStream.writeUTF(item1_stock); dataOutputStream.writeInt(item1_curr);
+
+                        dataOutputStream.writeUTF(item2_name); dataOutputStream.writeInt(item2_price);
+                        dataOutputStream.writeUTF(item2_stock); dataOutputStream.writeInt(item2_curr);
+
+                        dataOutputStream.writeUTF(item3_name); dataOutputStream.writeInt(item3_price);
+                        dataOutputStream.writeUTF(item3_stock); dataOutputStream.writeInt(item3_curr);
+
+                        dataOutputStream.writeUTF(item4_name); dataOutputStream.writeInt(item4_price);
+                        dataOutputStream.writeUTF(item4_stock); dataOutputStream.writeInt(item4_curr);
+
+                        dataOutputStream.writeUTF(item5_name); dataOutputStream.writeInt(item5_price);
+                        dataOutputStream.writeUTF(item5_stock); dataOutputStream.writeInt(item5_curr);
+
                         dataOutputStream.flush();
                     }
                 } catch (IOException e) {

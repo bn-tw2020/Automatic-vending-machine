@@ -3,6 +3,7 @@ package Server.controller;
 import Server.model.Item;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -21,8 +22,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Controller implements Initializable {
-    @FXML public Button fixA;
-    @FXML public Button fixB;
     ExecutorService executorService;
     ServerSocket serverSocket;
     List<Client> connections = new Vector<Client>(); // 스레드에 안전함
@@ -32,13 +31,12 @@ public class Controller implements Initializable {
     @FXML TreeTableColumn<Item, String> stock, stock1;
     @FXML TreeTableColumn<Item, String> current, current1;
     @FXML public TextArea txtDisplay;
-
-
+    Client client;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // 서버 시작 코드 (Executor Service 생성, ServerSocket 생성 및 포트 바인딩, 연결 수락)
 
-        executorService = Executors.newFixedThreadPool(50);
+        executorService = Executors.newFixedThreadPool(300);
         try {
             serverSocket = new ServerSocket();
             serverSocket.bind(new InetSocketAddress("localhost", 7777));
@@ -61,7 +59,7 @@ public class Controller implements Initializable {
                         Socket socket = serverSocket.accept(); // 연결 수락
                         String message = "[연결 수락 : " + socket.getRemoteSocketAddress() + ": " + Thread.currentThread().getName() + "]";
                         Platform.runLater(() -> displayText(message));
-                        Client client = new Client(socket);
+                        client = new Client(socket);
                         connections.add(client);
                         Platform.runLater(() -> displayText("[연결 개수 : " + connections.size() + " ]"));
                     } catch (Exception e) {
@@ -74,6 +72,19 @@ public class Controller implements Initializable {
             }
         };
         executorService.submit(runnable); // 스레드 풀에서 처리
+    }
+
+    public void fix(ActionEvent actionEvent) {
+//        Runnable runnable = new Runnable() {
+//            @Override
+//            public void run() {
+                if(client.vending.equals("A")) client.send("change_item");
+
+                else if(client.vending.equals("B")) client.send("change_item");
+                else{ return;}
+//            }
+//        };
+//        executorService.submit(runnable);
     }
 
     void stopServer() {
@@ -94,7 +105,6 @@ public class Controller implements Initializable {
         } catch (Exception ignored) {
         }
     }
-
 
     class Client {
         // 데이터 통신 코드
@@ -359,6 +369,76 @@ public class Controller implements Initializable {
                                         send("success");
                                     }
                                 }
+                                else if((meta.startsWith("change"))) {
+                                    String changeItem1_name = dataInputStream.readUTF(); int changeItem1_price = dataInputStream.readInt(); String changeItem1_stock = dataInputStream.readUTF(); int changeItem1_curr = dataInputStream.readInt();
+                                    String changeItem2_name = dataInputStream.readUTF(); int changeItem2_price = dataInputStream.readInt(); String changeItem2_stock = dataInputStream.readUTF(); int changeItem2_curr = dataInputStream.readInt();
+                                    String changeItem3_name = dataInputStream.readUTF(); int changeItem3_price = dataInputStream.readInt(); String changeItem3_stock = dataInputStream.readUTF(); int changeItem3_curr = dataInputStream.readInt();
+                                    String changeItem4_name = dataInputStream.readUTF(); int changeItem4_price = dataInputStream.readInt(); String changeItem4_stock = dataInputStream.readUTF(); int changeItem4_curr = dataInputStream.readInt();
+                                    String changeItem5_name = dataInputStream.readUTF(); int changeItem5_price = dataInputStream.readInt(); String changeItem5_stock = dataInputStream.readUTF(); int changeItem5_curr = dataInputStream.readInt();
+                                    if(vending.equals("A")) {
+                                        Platform.runLater(()-> {
+                                            System.out.println(changeItem1_curr);
+                                            System.out.println(changeItem2_curr);
+                                            System.out.println(changeItem3_curr);
+                                            System.out.println(changeItem4_curr);
+                                            System.out.println(changeItem5_curr);
+
+                                            tableView.getTreeItem(0).getValue().setNameProperty(changeItem1_name); tableView.getTreeItem(0).getValue().setPriceProperty(String.valueOf(changeItem1_price));
+                                            tableView.getTreeItem(0).getValue().setStockProperty(changeItem1_stock); tableView.getTreeItem(0).getValue().setCurrentProperty(String.valueOf(changeItem1_curr));
+                                            item1.getValue().setNameProperty(changeItem1_name); item1.getValue().setPriceProperty(String.valueOf(changeItem1_price));
+                                            item1.getValue().setStockProperty(changeItem1_stock); item1.getValue().setCurrentProperty(String.valueOf(changeItem1_curr));
+
+                                            tableView.getTreeItem(1).getValue().setNameProperty(changeItem2_name); tableView.getTreeItem(1).getValue().setPriceProperty(String.valueOf(changeItem2_price));
+                                            tableView.getTreeItem(1).getValue().setStockProperty(changeItem2_stock); tableView.getTreeItem(1).getValue().setCurrentProperty(String.valueOf(changeItem2_curr));
+                                            item2.getValue().setNameProperty(changeItem2_name); item2.getValue().setPriceProperty(String.valueOf(changeItem2_price));
+                                            item2.getValue().setStockProperty(changeItem2_stock); item2.getValue().setCurrentProperty(String.valueOf(changeItem2_curr));
+
+                                            tableView.getTreeItem(2).getValue().setNameProperty(changeItem3_name); tableView.getTreeItem(2).getValue().setPriceProperty(String.valueOf(changeItem3_price));
+                                            tableView.getTreeItem(2).getValue().setStockProperty(changeItem3_stock); tableView.getTreeItem(2).getValue().setCurrentProperty(String.valueOf(changeItem3_curr));
+                                            item3.getValue().setNameProperty(changeItem3_name); item3.getValue().setPriceProperty(String.valueOf(changeItem3_price));
+                                            item3.getValue().setStockProperty(changeItem3_stock); item3.getValue().setCurrentProperty(String.valueOf(changeItem3_curr));
+
+                                            tableView.getTreeItem(3).getValue().setNameProperty(changeItem4_name); tableView.getTreeItem(3).getValue().setPriceProperty(String.valueOf(changeItem4_price));
+                                            tableView.getTreeItem(3).getValue().setStockProperty(changeItem4_stock); tableView.getTreeItem(3).getValue().setCurrentProperty(String.valueOf(changeItem4_curr));
+                                            item4.getValue().setNameProperty(changeItem4_name); item4.getValue().setPriceProperty(String.valueOf(changeItem4_price));
+                                            item4.getValue().setStockProperty(changeItem4_stock); item4.getValue().setCurrentProperty(String.valueOf(changeItem4_curr));
+
+                                            tableView.getTreeItem(4).getValue().setNameProperty(changeItem5_name); tableView.getTreeItem(4).getValue().setPriceProperty(String.valueOf(changeItem5_price));
+                                            tableView.getTreeItem(4).getValue().setStockProperty(changeItem5_stock); tableView.getTreeItem(4).getValue().setCurrentProperty(String.valueOf(changeItem5_curr));
+                                            item5.getValue().setNameProperty(changeItem5_name); item5.getValue().setPriceProperty(String.valueOf(changeItem5_price));
+                                            item5.getValue().setStockProperty(changeItem5_stock); item5.getValue().setCurrentProperty(String.valueOf(changeItem5_curr));
+                                        });
+                                    }
+                                    else if(vending.equals("B")) {
+                                        Platform.runLater(()-> {
+                                            tableView1.getTreeItem(0).getValue().setNameProperty(changeItem1_name); tableView1.getTreeItem(0).getValue().setPriceProperty(String.valueOf(changeItem1_price));
+                                            tableView1.getTreeItem(0).getValue().setStockProperty(changeItem1_stock); tableView1.getTreeItem(0).getValue().setCurrentProperty(String.valueOf(changeItem1_curr));
+                                            item1.getValue().setNameProperty(changeItem1_name); item1.getValue().setPriceProperty(String.valueOf(changeItem1_price));
+                                            item1.getValue().setStockProperty(changeItem1_stock); item1.getValue().setCurrentProperty(String.valueOf(changeItem1_curr));
+
+                                            tableView1.getTreeItem(1).getValue().setNameProperty(changeItem2_name); tableView1.getTreeItem(1).getValue().setPriceProperty(String.valueOf(changeItem2_price));
+                                            tableView1.getTreeItem(1).getValue().setStockProperty(changeItem2_stock); tableView1.getTreeItem(1).getValue().setCurrentProperty(String.valueOf(changeItem2_curr));
+                                            item2.getValue().setNameProperty(changeItem2_name); item2.getValue().setPriceProperty(String.valueOf(changeItem2_price));
+                                            item2.getValue().setStockProperty(changeItem2_stock); item2.getValue().setCurrentProperty(String.valueOf(changeItem2_curr));
+
+                                            tableView1.getTreeItem(2).getValue().setNameProperty(changeItem3_name); tableView1.getTreeItem(2).getValue().setPriceProperty(String.valueOf(changeItem3_price));
+                                            tableView1.getTreeItem(2).getValue().setStockProperty(changeItem3_stock); tableView1.getTreeItem(2).getValue().setCurrentProperty(String.valueOf(changeItem3_curr));
+                                            item3.getValue().setNameProperty(changeItem3_name); item3.getValue().setPriceProperty(String.valueOf(changeItem3_price));
+                                            item3.getValue().setStockProperty(changeItem3_stock); item3.getValue().setCurrentProperty(String.valueOf(changeItem3_curr));
+
+                                            tableView1.getTreeItem(3).getValue().setNameProperty(changeItem4_name); tableView1.getTreeItem(3).getValue().setPriceProperty(String.valueOf(changeItem4_price));
+                                            tableView1.getTreeItem(3).getValue().setStockProperty(changeItem4_stock); tableView1.getTreeItem(3).getValue().setCurrentProperty(String.valueOf(changeItem4_curr));
+                                            item4.getValue().setNameProperty(changeItem4_name); item4.getValue().setPriceProperty(String.valueOf(changeItem4_price));
+                                            item4.getValue().setStockProperty(changeItem4_stock); item4.getValue().setCurrentProperty(String.valueOf(changeItem4_curr));
+
+                                            tableView1.getTreeItem(4).getValue().setNameProperty(changeItem5_name); tableView1.getTreeItem(4).getValue().setPriceProperty(String.valueOf(changeItem5_price));
+                                            tableView1.getTreeItem(4).getValue().setStockProperty(changeItem5_stock); tableView1.getTreeItem(4).getValue().setCurrentProperty(String.valueOf(changeItem5_curr));
+                                            item5.getValue().setNameProperty(changeItem5_name); item5.getValue().setPriceProperty(String.valueOf(changeItem5_price));
+                                            item5.getValue().setStockProperty(changeItem5_stock); item5.getValue().setCurrentProperty(String.valueOf(changeItem5_curr));
+                                        });
+                                    }
+                                    send("change_item");
+                                }
                             }
                         }
                     } catch (Exception e) {
@@ -426,6 +506,25 @@ public class Controller implements Initializable {
                                 dataOutputStream.flush();
                                 Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + vending + " : " + check + " " + item5.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
                             }
+                        }
+                        else if(message.equals("change_item")) {
+                            dataOutputStream.writeUTF("change_item");
+                            dataOutputStream.writeUTF(item1.getValue().getNameProperty()); dataOutputStream.writeUTF(item1.getValue().getPriceProperty());
+                            dataOutputStream.writeUTF(item1.getValue().getStockProperty()); dataOutputStream.writeUTF(item1.getValue().getCurrentProperty());
+
+                            dataOutputStream.writeUTF(item2.getValue().getNameProperty()); dataOutputStream.writeUTF(item2.getValue().getPriceProperty());
+                            dataOutputStream.writeUTF(item2.getValue().getStockProperty()); dataOutputStream.writeUTF(item2.getValue().getCurrentProperty());
+
+                            dataOutputStream.writeUTF(item3.getValue().getNameProperty()); dataOutputStream.writeUTF(item3.getValue().getPriceProperty());
+                            dataOutputStream.writeUTF(item3.getValue().getStockProperty()); dataOutputStream.writeUTF(item3.getValue().getCurrentProperty());
+
+                            dataOutputStream.writeUTF(item4.getValue().getNameProperty()); dataOutputStream.writeUTF(item4.getValue().getPriceProperty());
+                            dataOutputStream.writeUTF(item4.getValue().getStockProperty()); dataOutputStream.writeUTF(item4.getValue().getCurrentProperty());
+
+                            dataOutputStream.writeUTF(item5.getValue().getNameProperty()); dataOutputStream.writeUTF(item5.getValue().getPriceProperty());
+                            dataOutputStream.writeUTF(item5.getValue().getStockProperty()); dataOutputStream.writeUTF(item5.getValue().getCurrentProperty());
+                            dataOutputStream.flush();
+
                         }
 
                     } catch (Exception e) {

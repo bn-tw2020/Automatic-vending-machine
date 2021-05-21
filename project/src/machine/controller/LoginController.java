@@ -19,7 +19,7 @@ public class LoginController{
     public Button signup;
     public Button back;
 
-    String userId, userPw;
+    static String userId, userPw;
 
     @FXML
     public void loginBtn(ActionEvent event) {
