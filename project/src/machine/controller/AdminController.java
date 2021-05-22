@@ -2,16 +2,17 @@ package machine.controller;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTreeTableCell;
 import machine.model.Item;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -41,6 +42,7 @@ public class AdminController implements Initializable {
     public TextField changeID;
     public TextField changePW;
     public TextField change10, change50, change100, change500, change1000;
+    public AreaChart chart;
     TreeItem<Item> item1, item2, item3, item4, item5, root;
 
     // 수금 하기 // 거스름돈에서 빼내기
@@ -160,6 +162,7 @@ public class AdminController implements Initializable {
         tableView.setRoot(root);
         tableView.setShowRoot(false);
         soldUpdate();
+        monthUpdate();
     }
 
     public void goBack(ActionEvent actionEvent) {
@@ -200,6 +203,47 @@ public class AdminController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void monthUpdate() {
+        int month, price;
+        String temp;
+
+        int[] month_rate = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+        String filePath = Objects.requireNonNull(MainController.class.getResource("")).getPath() + "../data/beverage.txt";
+        File file = new File(filePath);
+
+        try {
+            FileReader fileReader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+            while((temp = bufferedReader.readLine()) != null) {
+                month = Integer.parseInt(temp.split(" ")[1].split("-")[1]);
+                price = Integer.parseInt(temp.split(" ")[2]);
+                month_rate[month - 1] += price;
+            }
+            XYChart.Series series = new XYChart.Series();
+            series.setName("월별 매출");
+            series.setData(FXCollections.observableArrayList(
+                    new XYChart.Data("1월", month_rate[0]),
+                    new XYChart.Data("2월", month_rate[1]),
+                    new XYChart.Data("3월", month_rate[2]),
+                    new XYChart.Data("4월", month_rate[3]),
+                    new XYChart.Data("5월", month_rate[4]),
+                    new XYChart.Data("6월", month_rate[5]),
+                    new XYChart.Data("7월", month_rate[6]),
+                    new XYChart.Data("8월", month_rate[7]),
+                    new XYChart.Data("9월", month_rate[8]),
+                    new XYChart.Data("10월", month_rate[9]),
+                    new XYChart.Data("11월", month_rate[10]),
+                    new XYChart.Data("12월", month_rate[11])
+            ));
+            chart.getData().add(series);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void setChange10(ActionEvent actionEvent) {

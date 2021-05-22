@@ -545,7 +545,7 @@ public class MainController implements Initializable {
                                 Platform.runLater(()-> {
                                     Date current_date = new Date();
                                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                    writeFileTrue("beverage.txt", item1_name + " " + dateFormat.format(current_date) + " : " + item1_price);
+                                    writeFileTrue("beverage.txt", item1_name + " " + dateFormat.format(current_date) + " " + item1_price);
                                     if(water_stock.isEmpty()) writeFileTrue("soldout.txt", item1_name + " " + dateFormat.format(current_date) + " 품절");
                                     System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
                                 });
@@ -566,7 +566,7 @@ public class MainController implements Initializable {
                                 Platform.runLater(()-> {
                                     Date current_date = new Date();
                                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                    writeFileTrue("beverage.txt", item2_name + " " + dateFormat.format(current_date) + " : " + item2_price);
+                                    writeFileTrue("beverage.txt", item2_name + " " + dateFormat.format(current_date) + " " + item2_price);
                                     if(coffee_stock.isEmpty()) writeFileTrue("soldout.txt", item2_name + " " + dateFormat.format(current_date) + " 품절");
                                     System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
                                 });
@@ -587,7 +587,7 @@ public class MainController implements Initializable {
                                 Platform.runLater(()-> {
                                     Date current_date = new Date();
                                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                    writeFileTrue("beverage.txt", item3_name + " " + dateFormat.format(current_date) + " : " + item3_price);
+                                    writeFileTrue("beverage.txt", item3_name + " " + dateFormat.format(current_date) + " " + item3_price);
                                     if(sports_drink_stock.isEmpty()) writeFileTrue("soldout.txt", item3_name + " " + dateFormat.format(current_date) + " 품절");
                                     System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
                                 });
@@ -608,7 +608,7 @@ public class MainController implements Initializable {
                                 Platform.runLater(()-> {
                                     Date current_date = new Date();
                                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                    writeFileTrue("beverage.txt", item4_name + " " + dateFormat.format(current_date) + " : " + item4_price);
+                                    writeFileTrue("beverage.txt", item4_name + " " + dateFormat.format(current_date) + " " + item4_price);
                                     if(premium_coffee_stock.isEmpty()) writeFileTrue("soldout.txt", item4_name + " " + dateFormat.format(current_date) + " 품절");
                                     System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
                                 });
@@ -629,7 +629,7 @@ public class MainController implements Initializable {
                                 Platform.runLater(()-> {
                                     Date current_date = new Date();
                                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                    writeFileTrue("beverage.txt", item5_name + " " + dateFormat.format(current_date) + " : " + item5_price);
+                                    writeFileTrue("beverage.txt", item5_name + " " + dateFormat.format(current_date) + " " + item5_price);
                                     if(soda_stock.isEmpty()) writeFileTrue("soldout.txt", item5_name + " " + dateFormat.format(current_date) + " 품절");
                                     System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
                                 });
@@ -941,10 +941,61 @@ public class MainController implements Initializable {
     /*
         1. 초기 세팅
      */
+
+    public void settingBeverage() {
+        String filePath = Objects.requireNonNull(MainController.class.getResource("")).getPath() + "../data/beverage.txt";
+        File file = new File(filePath);
+        try {
+            if(file.exists()) {
+                if(file.delete()) {
+                    System.out.println("삭제");
+                    if(file.createNewFile()) {
+                        System.out.println("파일 생성");
+                    } else {
+                        System.out.println("파일을 생성하지 못함");
+                    }
+                }
+                else {
+                    System.out.println("실패");
+                }
+            } else{
+                System.out.println("존재 하지 않습니다.");
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void settingSoldout() {
+        String filePath = Objects.requireNonNull(MainController.class.getResource("")).getPath() + "../data/soldout.txt";
+        File file = new File(filePath);
+        try {
+            if(file.exists()) {
+                if(file.delete()) {
+                    System.out.println("삭제");
+                    if(file.createNewFile()) {
+                        System.out.println("파일 생성");
+                    } else {
+                        System.out.println("파일을 생성하지 못함");
+                    }
+                }
+                else {
+                    System.out.println("실패");
+                }
+            } else{
+                System.out.println("존재 하지 않습니다.");
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         stage.setOnCloseRequest(event -> send("close"));
         text_coin.setEditable(false);
+        settingBeverage();
+        settingSoldout();
         active_button();
         startClient();
     }

@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Controller implements Initializable {
+    public TextField totalA, totalB;
     ExecutorService executorService;
     ServerSocket serverSocket;
     List<Client> connections = new Vector<Client>(); // 스레드에 안전함
@@ -37,7 +38,7 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // 서버 시작 코드 (Executor Service 생성, ServerSocket 생성 및 포트 바인딩, 연결 수락)
-
+        totalA.setEditable(false); totalB.setEditable(false);
         executorService = Executors.newFixedThreadPool(300);
         try {
             serverSocket = new ServerSocket();
@@ -101,16 +102,16 @@ public class Controller implements Initializable {
         }
     }
 
-    public void setChange10A(ActionEvent actionEvent) { }
-    public void setChange10B(ActionEvent actionEvent) { }
-    public void setChange50A(ActionEvent actionEvent) { }
-    public void setChange50B(ActionEvent actionEvent) { }
-    public void setChange100A(ActionEvent actionEvent) { }
-    public void setChange100B(ActionEvent actionEvent) { }
-    public void setChange500A(ActionEvent actionEvent) { }
-    public void setChange500B(ActionEvent actionEvent) { }
-    public void setChange1000A(ActionEvent actionEvent) { }
-    public void setChange1000B(ActionEvent actionEvent) { }
+    public void setChange10A(ActionEvent actionEvent) { client.send("Change10A"); }
+    public void setChange10B(ActionEvent actionEvent) { client.send("Change10B"); }
+    public void setChange50A(ActionEvent actionEvent) { client.send("Change50A"); }
+    public void setChange50B(ActionEvent actionEvent) { client.send("Change50B"); }
+    public void setChange100A(ActionEvent actionEvent) { client.send("Change100A"); }
+    public void setChange100B(ActionEvent actionEvent) { client.send("Change100B"); }
+    public void setChange500A(ActionEvent actionEvent) { client.send("Change500A"); }
+    public void setChange500B(ActionEvent actionEvent) { client.send("Change500B"); }
+    public void setChange1000A(ActionEvent actionEvent) { client.send("Change1000A"); }
+    public void setChange1000B(ActionEvent actionEvent) { client.send("Change1000B"); }
 
     class Client {
         // 데이터 통신 코드
@@ -125,8 +126,8 @@ public class Controller implements Initializable {
             item1 = new TreeItem<>(new Item("물", "450", "3", "0"));
             item2 = new TreeItem<>(new Item("커피", "500", "3", "0"));
             item3 = new TreeItem<>(new Item("이온음료", "550", "3", "0"));
-            item4 = new TreeItem<>(new Item("프리미엄 커피", "700", "3", "0"));
-            item5 = new TreeItem<>(new Item("탄산 음료", "750", "3", "0"));
+            item4 = new TreeItem<>(new Item("프리미엄커피", "700", "3", "0"));
+            item5 = new TreeItem<>(new Item("탄산음료", "750", "3", "0"));
             root = new TreeItem<>(new Item("Name", "0", "0", "0"));
             root.getChildren().setAll(item1, item2, item3, item4, item5);
             Platform.runLater(()-> {
@@ -529,7 +530,6 @@ public class Controller implements Initializable {
             executorService.submit(runnable); // 스레드풀에서 처리
         }
 
-
         void send(String message) {
             // 데이터 전송 코드
             Runnable runnable = new Runnable() { // 보내기 작업 생성
@@ -554,31 +554,51 @@ public class Controller implements Initializable {
                                 dataOutputStream.writeUTF("success");
                                 dataOutputStream.writeUTF(check);
                                 dataOutputStream.flush();
-                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + vending + " : " + check + " " + item1.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
+                                Platform.runLater(()-> {
+                                    displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + vending + " : " + check + " " + item1.getValue().getPriceProperty() + " 총 수익 : " + total_coins);
+                                    if(vending.equals("A")) totalA.setText(String.valueOf(total_coins));
+                                    else totalB.setText(String.valueOf(total_coins));
+                                });
                             }
                             else if(item2.getValue().getNameProperty().equals(check)) { // 커피 성공
                                 dataOutputStream.writeUTF("success");
                                 dataOutputStream.writeUTF(check);
                                 dataOutputStream.flush();
-                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + vending + " : " + check + " " + item2.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
+                                Platform.runLater(()-> {
+                                    displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + vending + " : " + check + " " + item2.getValue().getPriceProperty() + " 총 수익 : " + total_coins);
+                                    if(vending.equals("A")) totalA.setText(String.valueOf(total_coins));
+                                    else totalB.setText(String.valueOf(total_coins));
+                                });
                             }
                             else if(item3.getValue().getNameProperty().equals(check)) { // 이온 성공
                                 dataOutputStream.writeUTF("success");
                                 dataOutputStream.writeUTF(check);
                                 dataOutputStream.flush();
-                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + vending + " : " + check + " " + item3.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
+                                Platform.runLater(()-> {
+                                    displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + vending + " : " + check + " " + item3.getValue().getPriceProperty() + " 총 수익 : " + total_coins);
+                                    if(vending.equals("A")) totalA.setText(String.valueOf(total_coins));
+                                    else totalB.setText(String.valueOf(total_coins));
+                                });
                             }
                             else if(item4.getValue().getNameProperty().equals(check)) { // 비싼커피 성공
                                 dataOutputStream.writeUTF("success");
                                 dataOutputStream.writeUTF(check);
                                 dataOutputStream.flush();
-                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + vending + " : " + check + " " + item4.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
+                                Platform.runLater(()-> {
+                                    displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + vending + " : " + check + " " + item4.getValue().getPriceProperty() + " 총 수익 : " + total_coins);
+                                    if(vending.equals("A")) totalA.setText(String.valueOf(total_coins));
+                                    else totalB.setText(String.valueOf(total_coins));
+                                });
                             }
                             else if(item5.getValue().getNameProperty().equals(check)) { // 소다 성공
                                 dataOutputStream.writeUTF("success");
                                 dataOutputStream.writeUTF(check);
                                 dataOutputStream.flush();
-                                Platform.runLater(()-> displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + vending + " : " + check + " " + item5.getValue().getPriceProperty() + " 총 수익 : " + total_coins));
+                                Platform.runLater(()-> {
+                                    displayText("[판매완료] " + socket.getRemoteSocketAddress() + ": " + vending + " : " + check + " " + item5.getValue().getPriceProperty() + " 총 수익 : " + total_coins);
+                                    if(vending.equals("A")) totalA.setText(String.valueOf(total_coins));
+                                    else totalB.setText(String.valueOf(total_coins));
+                                });
                             }
                         }
                         else if(message.equals("change_item")) {
