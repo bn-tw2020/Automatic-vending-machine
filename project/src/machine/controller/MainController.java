@@ -139,7 +139,7 @@ public class MainController implements Initializable {
         output.setText("");
         if (total_coins + 10 > 5000) return;
         coins.add(new Coin(10));
-//        change_10.push(new Coin(10));
+        change_10.push(new Coin(10));
         total_coins += 10;
         update_input_coin(); // 돈 삽입한거 ui 업데이트
         onOffReturnCoin();
@@ -147,12 +147,13 @@ public class MainController implements Initializable {
         return_coin(); // 반환가능한지 업데이트
         is_input_1000(); // 천언을 3개 넣었는지 확인
         is_limit_coin(); // 5000원 이상을 넣었는지 확인
+        send("setChange", "10", change_10.size());
     }
     public void coinInsert_50(ActionEvent actionEvent) {
         output.setText("");
         if (total_coins + 50 > 5000) return;
         coins.add(new Coin(50));
-//        change_50.push(new Coin(50));
+        change_50.push(new Coin(50));
         total_coins += 50;
         update_input_coin(); // 돈 삽입한거 ui 업데이트
         onOffReturnCoin();
@@ -160,12 +161,13 @@ public class MainController implements Initializable {
         return_coin(); // 반환가능한지 업데이트
         is_input_1000(); // 천언을 3개 넣었는지 확인
         is_limit_coin(); // 5000원 이상을 넣었는지 확인
+        send("setChange", "50", change_50.size());
     }
     public void coinInsert_100(ActionEvent actionEvent) {
         output.setText("");
         if (total_coins + 100 > 5000) return;
         coins.add(new Coin(100));
-//        change_100.push(new Coin(100));
+        change_100.push(new Coin(100));
         total_coins += 100;
         update_input_coin(); // 돈 삽입한거 ui 업데이트
         onOffReturnCoin();
@@ -173,12 +175,13 @@ public class MainController implements Initializable {
         return_coin(); // 반환가능한지 업데이트
         is_input_1000(); // 천언을 3개 넣었는지 확인
         is_limit_coin(); // 5000원 이상을 넣었는지 확인
+        send("setChange", "100", change_100.size());
     }
     public void coinInsert_500(ActionEvent actionEvent) {
         output.setText("");
         if (total_coins + 500 > 5000) return;
         coins.add(new Coin(500));
-//        change_500.push(new Coin(500));
+        change_500.push(new Coin(500));
         total_coins += 500;
         update_input_coin(); // 돈 삽입한거 ui 업데이트
         onOffReturnCoin();
@@ -186,12 +189,13 @@ public class MainController implements Initializable {
         return_coin(); // 반환가능한지 업데이트
         is_input_1000(); // 천언을 3개 넣었는지 확인
         is_limit_coin(); // 5000원 이상을 넣었는지 확인
+        send("setChange", "500", change_500.size());
     }
     public void coinInsert_1000(ActionEvent actionEvent) {
         output.setText("");
         if (total_coins + 1000 > 5000) return;
         coins.add(new Coin(1000));
-//        change_1000.push(new Coin(1000));
+        change_1000.push(new Coin(1000));
         total_coins += 1000;
         update_input_coin(); // 돈 삽입한거 ui 업데이트
         onOffReturnCoin();
@@ -199,6 +203,7 @@ public class MainController implements Initializable {
         return_coin(); // 반환가능한지 업데이트
         is_input_1000(); // 천언을 3개 넣었는지 확인
         is_limit_coin(); // 5000원 이상을 넣었는지 확인
+        send("setChange", "1000", change_1000.size());
     }
 
     // 현재까지 넣은돈 ui 업데이트
@@ -214,41 +219,47 @@ public class MainController implements Initializable {
                 water.setDisable(false);
                 if (water_stock.isEmpty()) {
                     water.setDisable(true);
-                    water.setText("Sold Out");
+                    water.setText("품절");
+                    send("SoldOut", item1_name);
                 }
             } else {
                 water.setDisable(true);
                 if (water_stock.isEmpty()) {
                     water.setDisable(true);
-                    water.setText("Sold Out");
+                    water.setText("품절");
+                    send("SoldOut", item1_name);
                 }
             }
 
             if (total_coins >= item2_price) {
                 coffee.setDisable(false);
                 if (coffee_stock.isEmpty()) {
-                    water.setDisable(true);
-                    water.setText("Sold Out");
+                    coffee.setDisable(true);
+                    coffee.setText("품절");
+                    send("SoldOut", item2_name);
                 }
             } else {
                 coffee.setDisable(true);
                 if (coffee_stock.isEmpty()) {
                     coffee.setDisable(true);
-                    coffee.setText("Sold Out");
+                    coffee.setText("품절");
+                    send("SoldOut", item2_name);
                 }
             }
 
             if (total_coins >= item3_price) {
                 sports_drink.setDisable(false);
                 if (sports_drink_stock.isEmpty()) {
-                    water.setDisable(true);
-                    water.setText("Sold Out");
+                    sports_drink.setDisable(true);
+                    sports_drink.setText("품절");
+                    send("SoldOut", item3_name);
                 }
             } else {
                 sports_drink.setDisable(true);
                 if (sports_drink_stock.isEmpty()) {
                     sports_drink.setDisable(true);
-                    sports_drink.setText("Sold Out");
+                    sports_drink.setText("품절");
+                    send("SoldOut", item3_name);
                 }
             }
 
@@ -256,13 +267,15 @@ public class MainController implements Initializable {
                 premium_coffee.setDisable(false);
                 if (premium_coffee_stock.isEmpty()) {
                     premium_coffee.setDisable(true);
-                    premium_coffee.setText("Sold Out");
+                    premium_coffee.setText("품절");
+                    send("SoldOut", item4_name);
                 }
             } else {
                 premium_coffee.setDisable(true);
                 if (premium_coffee_stock.isEmpty()) {
                     premium_coffee.setDisable(true);
-                    premium_coffee.setText("Sold Out");
+                    premium_coffee.setText("품절");
+                    send("SoldOut", item4_name);
                 }
             }
 
@@ -270,13 +283,15 @@ public class MainController implements Initializable {
                 soda.setDisable(false);
                 if (soda_stock.isEmpty()) {
                     soda.setDisable(true);
-                    soda.setText("Sold Out");
+                    soda.setText("품절");
+                    send("SoldOut", item5_name);
                 }
             } else {
                 soda.setDisable(true);
                 if (soda_stock.isEmpty()) {
                     soda.setDisable(true);
-                    soda.setText("Sold Out");
+                    soda.setText("품절");
+                    send("SoldOut", item5_name);
                 }
             }
         });
@@ -322,38 +337,9 @@ public class MainController implements Initializable {
         1. 돈 반환
      */
     public void coinReturn(ActionEvent actionEvent) {
-
+        System.out.println(total_coins);
         int count_10 = 0; int count_50 = 0; int count_100 = 0; int count_500 = 0; int count_1000 = 0;
         String outputString = "";
-
-//        for(int i = 0; i < coins.size(); i++) {
-//            if(coins.get(i).getValue() == 1000 && !change_1000.isEmpty()) {
-//                coins.remove(i); count_1000++;
-//                total_coins -= 1000;
-//                change_1000.pop();
-//            }
-//            else if(coins.get(i).getValue() == 500 && !change_500.isEmpty()) {
-//                coins.remove(i); count_500++;
-//                total_coins -= 500;
-//                change_500.pop();
-//            }
-//            else if(coins.get(i).getValue() == 100 && !change_100.isEmpty()) {
-//                coins.remove(i); count_100++;
-//                total_coins -= 100;
-//                change_100.pop();
-//            }
-//            else if(coins.get(i).getValue() == 50 && !change_50.isEmpty()) {
-//                coins.remove(i); count_50++;
-//                total_coins -= 50;
-//                change_50.pop();
-//            }
-//            else if(coins.get(i).getValue() == 10 && !change_10.isEmpty()) {
-//                coins.remove(i); count_10++;
-//                total_coins -= 10;
-//                change_10.pop();
-//            }
-//        }
-
         while(total_coins >= 0) {
             if(total_coins - 1000 >= 0 && !change_1000.isEmpty()) {
                 count_1000++; total_coins -= 1000; change_1000.pop();
@@ -379,6 +365,12 @@ public class MainController implements Initializable {
             return;
         }
 
+        System.out.println(count_1000);
+        System.out.println(count_500);
+        System.out.println(count_100);
+        System.out.println(count_50);
+        System.out.println(count_10);
+        send("setChange", change_10.size(), change_50.size(), change_100.size(), change_500.size(), change_1000.size());
         if(count_1000 > 0) outputString += "1000원 : " + count_1000 + "개 ";
         if(count_500 > 0) outputString += "500원 : " + count_500 + "개 ";
         if(count_100 > 0) outputString += "100원 : " + count_100 + "개 ";
@@ -393,8 +385,9 @@ public class MainController implements Initializable {
 
         coin_10.setDisable(false); coin_50.setDisable(false); coin_100.setDisable(false);
         coin_500.setDisable(false); coin_1000.setDisable(false);
-        is_buy();
+        onOffReturnCoin();
     }
+
 
 
     // =====================================================
@@ -459,6 +452,22 @@ public class MainController implements Initializable {
         }
     }
 
+    // 파일로 관리자 데이터 저장하기
+    static public void writeFileTrue(String filename, String message) {
+        String filePath = Objects.requireNonNull(MainController.class.getResource("")).getPath() + "../data/" + filename;
+        File file = new File(filePath);
+
+        try {
+            FileWriter fileWriter = new FileWriter(file, true);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+            bufferedWriter.write(message);
+            bufferedWriter.newLine();
+            bufferedWriter.flush();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
     /*
@@ -503,7 +512,7 @@ public class MainController implements Initializable {
                 String meta = null;
 
                 while((meta = dataInputStream.readUTF()) != null) {
-                    if(meta.startsWith("init")) { // 소켓과의 초기 세팅
+                    if(meta.equals("init")) { // 소켓과의 초기 세팅
                         int initChange = dataInputStream.readInt();
                         int initBeverage = dataInputStream.readInt();
                         setting_change(initChange);
@@ -519,7 +528,7 @@ public class MainController implements Initializable {
                             System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
                         });
                     }
-                    else if(meta.startsWith("success")) {
+                    else if(meta.equals("success")) {
                         String check = dataInputStream.readUTF();
                         if(check.equals(item1_name)) {
                             if(!water_stock.isEmpty()) {
@@ -534,6 +543,10 @@ public class MainController implements Initializable {
                                 is_input_1000(); // 천언을 3개 넣었는지 확인
                                 output.setText(item1_name);
                                 Platform.runLater(()-> {
+                                    Date current_date = new Date();
+                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    writeFileTrue("beverage.txt", item1_name + " " + dateFormat.format(current_date) + " : " + item1_price);
+                                    if(water_stock.isEmpty()) writeFileTrue("soldout.txt", item1_name + " " + dateFormat.format(current_date) + " 품절");
                                     System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
                                 });
                             }
@@ -551,6 +564,10 @@ public class MainController implements Initializable {
                                 is_input_1000(); // 천언을 3개 넣었는지 확인
                                 output.setText(item2_name);
                                 Platform.runLater(()-> {
+                                    Date current_date = new Date();
+                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    writeFileTrue("beverage.txt", item2_name + " " + dateFormat.format(current_date) + " : " + item2_price);
+                                    if(coffee_stock.isEmpty()) writeFileTrue("soldout.txt", item2_name + " " + dateFormat.format(current_date) + " 품절");
                                     System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
                                 });
                             }
@@ -568,6 +585,10 @@ public class MainController implements Initializable {
                                 is_input_1000(); // 천언을 3개 넣었는지 확인
                                 output.setText(item3_name);
                                 Platform.runLater(()-> {
+                                    Date current_date = new Date();
+                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    writeFileTrue("beverage.txt", item3_name + " " + dateFormat.format(current_date) + " : " + item3_price);
+                                    if(sports_drink_stock.isEmpty()) writeFileTrue("soldout.txt", item3_name + " " + dateFormat.format(current_date) + " 품절");
                                     System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
                                 });
                             }
@@ -585,6 +606,10 @@ public class MainController implements Initializable {
                                 is_input_1000(); // 천언을 3개 넣었는지 확인
                                 output.setText(item4_name);
                                 Platform.runLater(()-> {
+                                    Date current_date = new Date();
+                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    writeFileTrue("beverage.txt", item4_name + " " + dateFormat.format(current_date) + " : " + item4_price);
+                                    if(premium_coffee_stock.isEmpty()) writeFileTrue("soldout.txt", item4_name + " " + dateFormat.format(current_date) + " 품절");
                                     System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
                                 });
                             }
@@ -602,12 +627,16 @@ public class MainController implements Initializable {
                                 is_input_1000(); // 천언을 3개 넣었는지 확인
                                 output.setText(item5_name);
                                 Platform.runLater(()-> {
+                                    Date current_date = new Date();
+                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    writeFileTrue("beverage.txt", item5_name + " " + dateFormat.format(current_date) + " : " + item5_price);
+                                    if(soda_stock.isEmpty()) writeFileTrue("soldout.txt", item5_name + " " + dateFormat.format(current_date) + " 품절");
                                     System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
                                 });
                             }
                         }
                     }
-                    else if(meta.startsWith("change_item")) {
+                    else if(meta.equals("change_item")) {
                         item1_name = dataInputStream.readUTF(); item1_price = Integer.parseInt(dataInputStream.readUTF());
                         item1_stock = dataInputStream.readUTF(); item1_curr = Integer.parseInt(dataInputStream.readUTF());
                         item2_name = dataInputStream.readUTF(); item2_price = Integer.parseInt(dataInputStream.readUTF());
@@ -623,13 +652,108 @@ public class MainController implements Initializable {
                             premium_coffee.setText(String.valueOf(item4_price)); soda.setText(String.valueOf(item5_price));
 
                             water_stock.clear(); coffee_stock.clear(); sports_drink_stock.clear(); premium_coffee_stock.clear(); soda_stock.clear();
-                            for (int i = 0; i < Integer.parseInt(item1_stock); i++) water_stock.add(new Beverage(item1_name, item1_price));
-                            for (int i = 0; i < Integer.parseInt(item2_stock); i++) coffee_stock.add(new Beverage(item2_name, item2_price));
-                            for (int i = 0; i < Integer.parseInt(item3_stock); i++) sports_drink_stock.add(new Beverage(item3_name, item3_price));
-                            for (int i = 0; i < Integer.parseInt(item4_stock); i++) premium_coffee_stock.add(new Beverage(item4_name, item4_price));
-                            for (int i = 0; i < Integer.parseInt(item5_stock); i++) soda_stock.add(new Beverage(item5_name, item5_price));
+                            for (int i = 0; i < Integer.parseInt(item1_stock); i++) {
+                                water_stock.add(new Beverage(item1_name, item1_price));
+                                is_buy();
+                            }
+                            for (int i = 0; i < Integer.parseInt(item2_stock); i++) {
+                                coffee_stock.add(new Beverage(item2_name, item2_price));
+                                is_buy();
+                            }
+                            for (int i = 0; i < Integer.parseInt(item3_stock); i++) {
+                                sports_drink_stock.add(new Beverage(item3_name, item3_price));
+                                is_buy();
+                            }
+                            for (int i = 0; i < Integer.parseInt(item4_stock); i++) {
+                                premium_coffee_stock.add(new Beverage(item4_name, item4_price));
+                                is_buy();
+                            }
+                            for (int i = 0; i < Integer.parseInt(item5_stock); i++) {
+                                soda_stock.add(new Beverage(item5_name, item5_price));
+                                is_buy();
+                            }
                         });
 
+                    }
+                    else if(meta.equals("change10")) {
+                        int changeCoin = dataInputStream.readInt();
+                        Platform.runLater(()->{
+                            while(change_10.size() != changeCoin) {
+                                if(change_10.size() < changeCoin) change_10.push(new Coin(10));
+                                else change_10.pop();
+                            }
+                            System.out.println();
+                            System.out.println("10원 : " + change_10.size());
+                            System.out.println("50원 : " + change_50.size());
+                            System.out.println("100원 : " + change_100.size());
+                            System.out.println("500원 : " + change_500.size());
+                            System.out.println("1000원 : " + change_1000.size());
+                            System.out.println();
+                        });
+                    }
+                    else if(meta.equals("change50")) {
+                        int changeCoin = dataInputStream.readInt();
+                        Platform.runLater(()->{
+                            while(change_50.size() != changeCoin) {
+                                if(change_50.size() < changeCoin) change_50.push(new Coin(50));
+                                else change_50.pop();
+                            }
+                            System.out.println();
+                            System.out.println("10원 : " + change_10.size());
+                            System.out.println("50원 : " + change_50.size());
+                            System.out.println("100원 : " + change_100.size());
+                            System.out.println("500원 : " + change_500.size());
+                            System.out.println("1000원 : " + change_1000.size());
+                            System.out.println();
+                        });
+                    }
+                    else if(meta.equals("change100")) {
+                        int changeCoin = dataInputStream.readInt();
+                        Platform.runLater(()->{
+                            while(change_100.size() != changeCoin) {
+                                if(change_100.size() < changeCoin) change_100.push(new Coin(100));
+                                else change_100.pop();
+                            }
+                            System.out.println();
+                            System.out.println("10원 : " + change_10.size());
+                            System.out.println("50원 : " + change_50.size());
+                            System.out.println("100원 : " + change_100.size());
+                            System.out.println("500원 : " + change_500.size());
+                            System.out.println("1000원 : " + change_1000.size());
+                            System.out.println();
+                        });
+                    }
+                    else if(meta.equals("change500")) {
+                        int changeCoin = dataInputStream.readInt();
+                        Platform.runLater(()->{
+                            while(change_500.size() != changeCoin) {
+                                if(change_500.size() < changeCoin) change_500.push(new Coin(500));
+                                else change_500.pop();
+                            }
+                            System.out.println();
+                            System.out.println("10원 : " + change_10.size());
+                            System.out.println("50원 : " + change_50.size());
+                            System.out.println("100원 : " + change_100.size());
+                            System.out.println("500원 : " + change_500.size());
+                            System.out.println("1000원 : " + change_1000.size());
+                            System.out.println();
+                        });
+                    }
+                    else if(meta.equals("change1000")) {
+                        int changeCoin = dataInputStream.readInt();
+                        Platform.runLater(()->{
+                            while(change_1000.size() != changeCoin) {
+                                if(change_1000.size() < changeCoin) change_1000.push(new Coin(1000));
+                                else change_1000.pop();
+                            }
+                            System.out.println();
+                            System.out.println("10원 : " + change_10.size());
+                            System.out.println("50원 : " + change_50.size());
+                            System.out.println("100원 : " + change_100.size());
+                            System.out.println("500원 : " + change_500.size());
+                            System.out.println("1000원 : " + change_1000.size());
+                            System.out.println();
+                        });
                     }
                 }
 
@@ -706,6 +830,113 @@ public class MainController implements Initializable {
         };
         thread.start();
     }
+
+    static void send(String message, String name) {
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+                try {
+                    DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                    if(message.equals("SoldOut")) {
+                        dataOutputStream.writeUTF("SoldOut");
+                        dataOutputStream.writeUTF(name);
+                        dataOutputStream.flush();
+                    }
+                } catch (IOException e) {
+                    Platform.runLater(()-> System.out.println("[서버 통신 안됨]"));
+                    stopClient();
+                }
+
+            }
+        };
+        thread.start();
+    }
+
+    static void send(String message, String money, int count){
+        // 데이터 전송 코드
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+                try {
+                    DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                    if(message.equals("setChange")) {
+                        if(money.equals("10")) {
+                            Platform.runLater(()->{
+                                System.out.println(message + " " + money + " " + count);
+                            });
+                            dataOutputStream.writeUTF("setChange10");
+                            dataOutputStream.writeInt(count);
+                            dataOutputStream.flush();
+                        }
+                        else if(money.equals("50")) {
+                            Platform.runLater(()->{
+                                System.out.println(message + " " + money + " " + count);
+                            });
+                            dataOutputStream.writeUTF("setChange50");
+                            dataOutputStream.writeInt(count);
+                            dataOutputStream.flush();
+                        } // 5 5 5 5 8
+                          // 5 4 2 4 8
+                        else if(money.equals("100")) {
+                            Platform.runLater(()->{
+                                System.out.println(message + " " + money + " " + count);
+                            });
+                            dataOutputStream.writeUTF("setChange100");
+                            dataOutputStream.writeInt(count);
+                            dataOutputStream.flush();
+
+                        }
+                        else if(money.equals("500")) {
+                            Platform.runLater(()->{
+                                System.out.println(message + " " + money + " " + count);
+                            });
+                            dataOutputStream.writeUTF("setChange500");
+                            dataOutputStream.writeInt(count);
+                            dataOutputStream.flush();
+                        }
+                        else if(money.equals("1000")) {
+                            Platform.runLater(()->{
+                                System.out.println(message + " " + money + " " + count);
+                            });
+                            dataOutputStream.writeUTF("setChange1000");
+                            dataOutputStream.writeInt(count);
+                            dataOutputStream.flush();
+                        }
+                    }
+                } catch (IOException e) {
+                    Platform.runLater(()-> System.out.println("[서버 통신 안됨]"));
+                    stopClient();
+                }
+
+            }
+        };
+        thread.start();
+    }
+
+    static void send(String message, int c10, int c50, int c100, int c500, int c1000){
+        // 데이터 전송 코드
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+                try {
+                    DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                    if(message.equals("setChange")) {
+                        dataOutputStream.writeUTF("setChangeAll");
+                        dataOutputStream.writeInt(c10); dataOutputStream.writeInt(c50);
+                        dataOutputStream.writeInt(c100); dataOutputStream.writeInt(c500);
+                        dataOutputStream.writeInt(c1000);
+                        dataOutputStream.flush();
+                    }
+                } catch (IOException e) {
+                    Platform.runLater(()-> System.out.println("[서버 통신 안됨]"));
+                    stopClient();
+                }
+
+            }
+        };
+        thread.start();
+    }
+
 
     /*
         1. 초기 세팅

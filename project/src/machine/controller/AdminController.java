@@ -40,21 +40,57 @@ public class AdminController implements Initializable {
     static String item5_stock;
     public TextField changeID;
     public TextField changePW;
+    public TextField change10, change50, change100, change500, change1000;
     TreeItem<Item> item1, item2, item3, item4, item5, root;
 
-    // 수금 하기
+    // 수금 하기 // 거스름돈에서 빼내기
     public void getCoin(ActionEvent actionEvent) {
         int totalMoney = Integer.parseInt(money.getText());
         money.setText("");
         total = 0;
 
-        System.out.println("10원 : " + change_10.size() + "50원 : " + change_50.size() + "100원 : " + change_100.size() + "500원 : " + change_500.size() + "1000원 : " + change_1000.size());
+        int count_10 = 0; int count_50 = 0; int count_100 = 0; int count_500 = 0; int count_1000 = 0;
+        String outputString = "";
+        while(totalMoney >= 0) {
+            if(totalMoney - 1000 >= 0 && !change_1000.isEmpty()) {
+                count_1000++; totalMoney -= 1000; change_1000.pop();
+            }
+            else if(totalMoney - 500 >= 0 && !change_500.isEmpty()) {
+                count_500++; totalMoney -= 500; change_500.pop();
+            }
+            else if(totalMoney - 100 >= 0 && !change_100.isEmpty()) {
+                count_100++; totalMoney -= 100; change_100.pop();
+            }
+            else if(totalMoney - 50 >= 0 && !change_50.isEmpty()) {
+                count_50++; totalMoney -= 50; change_50.pop();
+            }
+            else if(totalMoney - 10 >= 0 && !change_10.isEmpty()) {
+                count_10++; totalMoney -= 10; change_10.pop();
+            } else {
+                break;
+            }
+        }
+        change10.setText(String.valueOf(change_10.size()));change50.setText(String.valueOf(change_50.size()));change100.setText(String.valueOf(change_100.size()));change500.setText(String.valueOf(change_500.size()));change1000.setText(String.valueOf(change_1000.size()));
+        send("setChange", change_10.size(), change_50.size(), change_100.size(), change_500.size(), change_1000.size());
+        if(count_1000 > 0) outputString += "1000원 : " + count_1000 + "개 ";
+        if(count_500 > 0) outputString += "500원 : " + count_500 + "개 ";
+        if(count_100 > 0) outputString += "100원 : " + count_100 + "개 ";
+        if(count_50 > 0) outputString += "50원 : " + count_50 + "개 ";
+        if(count_10 > 0) outputString += "10원 : " + count_10 + "개 ";
+
+        System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
+        txtDisplay.setText(outputString.trim() + "를 수금했습니다.");
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         changeID.setText(LoginController.userId);
         changePW.setText(LoginController.userPw);
+        change10.setText(String.valueOf(change_10.size()));
+        change50.setText(String.valueOf(change_50.size()));
+        change100.setText(String.valueOf(change_100.size()));
+        change500.setText(String.valueOf(change_500.size()));
+        change1000.setText(String.valueOf(change_1000.size()));
         money.setText(String.valueOf(total));
 
         item1 = new TreeItem<Item>(new Item(item1_name, String.valueOf(item1_price), String.valueOf(MainController.water_stock.size()), String.valueOf(item1_curr)));
@@ -118,9 +154,12 @@ public class AdminController implements Initializable {
             if(event.getTreeTablePosition().getRow() == 3) item4_curr = Integer.parseInt(event.getNewValue());
             if(event.getTreeTablePosition().getRow() == 4) item5_curr = Integer.parseInt(event.getNewValue());
         });
+
+
         tableView.setEditable(true);
         tableView.setRoot(root);
         tableView.setShowRoot(false);
+        soldUpdate();
     }
 
     public void goBack(ActionEvent actionEvent) {
@@ -146,5 +185,46 @@ public class AdminController implements Initializable {
             changePW.setText("");
             changePW.setStyle("-fx-border-color: #000000;");
         }
+    }
+
+    public void soldUpdate() {
+        String filePath = Objects.requireNonNull(SignUpController.class.getResource("")).getPath() + "../data/soldout.txt";
+        File file = new File(filePath);
+        String msg;
+        try {
+            FileReader fileReader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            while((msg = bufferedReader.readLine()) != null) {
+                txtDisplay.appendText(msg + "\n");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setChange10(ActionEvent actionEvent) {
+        int changeCoin = Integer.parseInt(change10.getText());
+        if(change_10.size() == changeCoin) return;
+        else send("setChange", "10", changeCoin);
+    }
+    public void setChange50(ActionEvent actionEvent) {
+        int changeCoin = Integer.parseInt(change50.getText());
+        if(change_50.size() == changeCoin) return;
+        else send("setChange", "50", changeCoin);
+    }
+    public void setChange100(ActionEvent actionEvent) {
+        int changeCoin = Integer.parseInt(change100.getText());
+        if(change_100.size() == changeCoin) return;
+        else send("setChange", "100", changeCoin);
+    }
+    public void setChange500(ActionEvent actionEvent) {
+        int changeCoin = Integer.parseInt(change500.getText());
+        if(change_500.size() == changeCoin) return;
+        else send("setChange", "500", changeCoin);
+    }
+    public void setChange1000(ActionEvent actionEvent) {
+        int changeCoin = Integer.parseInt(change1000.getText());
+        if(change_1000.size() == changeCoin) return;
+        else send("setChange", "1000", changeCoin);
     }
 }

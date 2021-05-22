@@ -54,6 +54,41 @@
             <TreeTableColumn fx:id="current" prefWidth="57.0" text="현황" />
         </columns>
       </TreeTableView>
+      <Label layoutX="210.0" layoutY="43.0" text="10">
+         <font>
+            <Font name="Bauhaus 93" size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="change10" layoutX="236.0" layoutY="42.0" prefHeight="22.0" prefWidth="39.0" />
+      <Label layoutX="210.0" layoutY="75.0" text="50">
+         <font>
+            <Font name="Bauhaus 93" size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="change50" layoutX="236.0" layoutY="74.0" prefHeight="22.0" prefWidth="39.0" />
+      <Label layoutX="202.0" layoutY="107.0" text="100">
+         <font>
+            <Font name="Bauhaus 93" size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="change100" layoutX="236.0" layoutY="106.0" prefHeight="22.0" prefWidth="39.0" />
+      <Label layoutX="202.0" layoutY="140.0" text="500">
+         <font>
+            <Font name="Bauhaus 93" size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="change500" layoutX="236.0" layoutY="139.0" prefHeight="22.0" prefWidth="39.0" />
+      <Label layoutX="194.0" layoutY="172.0" text="1000">
+         <font>
+            <Font name="Bauhaus 93" size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="change1000" layoutX="236.0" layoutY="171.0" prefHeight="22.0" prefWidth="39.0" />
+      <Button layoutX="281.0" layoutY="74.0" mnemonicParsing="false" onAction="#setChange50" text="수정" />
+      <Button layoutX="281.0" layoutY="42.0" mnemonicParsing="false" onAction="#setChange10" text="수정" />
+      <Button layoutX="281.0" layoutY="106.0" mnemonicParsing="false" onAction="#setChange100" text="수정" />
+      <Button layoutX="281.0" layoutY="139.0" mnemonicParsing="false" onAction="#setChange500" text="수정" />
+      <Button layoutX="281.0" layoutY="171.0" mnemonicParsing="false" onAction="#setChange1000" text="수정" />
     </Pane>
     <Pane prefHeight="500.0" prefWidth="491.0">
         <TextArea fx:id="txtDisplay" layoutX="12.0" layoutY="14.0" prefHeight="200.0" prefWidth="419.0" />

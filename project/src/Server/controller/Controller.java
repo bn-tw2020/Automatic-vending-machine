@@ -31,6 +31,8 @@ public class Controller implements Initializable {
     @FXML TreeTableColumn<Item, String> stock, stock1;
     @FXML TreeTableColumn<Item, String> current, current1;
     @FXML public TextArea txtDisplay;
+    @FXML TextField change10B, change50B, change100B, change500B, change1000B;
+    @FXML TextField change10A, change50A, change100A, change500A, change1000A;
     Client client;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -75,16 +77,9 @@ public class Controller implements Initializable {
     }
 
     public void fix(ActionEvent actionEvent) {
-//        Runnable runnable = new Runnable() {
-//            @Override
-//            public void run() {
-                if(client.vending.equals("A")) client.send("change_item");
-
-                else if(client.vending.equals("B")) client.send("change_item");
-                else{ return;}
-//            }
-//        };
-//        executorService.submit(runnable);
+        if(client.vending.equals("A")) client.send("change_item");
+        else if(client.vending.equals("B")) client.send("change_item");
+        else{ return;}
     }
 
     void stopServer() {
@@ -106,6 +101,17 @@ public class Controller implements Initializable {
         }
     }
 
+    public void setChange10A(ActionEvent actionEvent) { }
+    public void setChange10B(ActionEvent actionEvent) { }
+    public void setChange50A(ActionEvent actionEvent) { }
+    public void setChange50B(ActionEvent actionEvent) { }
+    public void setChange100A(ActionEvent actionEvent) { }
+    public void setChange100B(ActionEvent actionEvent) { }
+    public void setChange500A(ActionEvent actionEvent) { }
+    public void setChange500B(ActionEvent actionEvent) { }
+    public void setChange1000A(ActionEvent actionEvent) { }
+    public void setChange1000B(ActionEvent actionEvent) { }
+
     class Client {
         // 데이터 통신 코드
         Socket socket;
@@ -123,11 +129,11 @@ public class Controller implements Initializable {
             item5 = new TreeItem<>(new Item("탄산 음료", "750", "3", "0"));
             root = new TreeItem<>(new Item("Name", "0", "0", "0"));
             root.getChildren().setAll(item1, item2, item3, item4, item5);
-
             Platform.runLater(()-> {
                 if(tableView.getRoot() == null) {
                     flag = true;
                     vending = "A";
+                    change10A.setText("5"); change50A.setText("5"); change100A.setText("5"); change500A.setText("5"); change1000A.setText("5");
                     name.setCellValueFactory(param -> param.getValue().getValue().namePropertyProperty());
                     price.setCellValueFactory(param -> param.getValue().getValue().pricePropertyProperty());
                     stock.setCellValueFactory(param -> param.getValue().getValue().stockPropertyProperty());
@@ -160,6 +166,7 @@ public class Controller implements Initializable {
                 }
                 else if(tableView1.getRoot() == null) {
                     vending = "B";
+                    change10B.setText("5"); change50B.setText("5"); change100B.setText("5"); change500B.setText("5"); change1000B.setText("5");
                     name1.setCellValueFactory(param -> param.getValue().getValue().namePropertyProperty());
                     price1.setCellValueFactory(param -> param.getValue().getValue().pricePropertyProperty());
                     stock1.setCellValueFactory(param -> param.getValue().getValue().stockPropertyProperty());
@@ -206,21 +213,22 @@ public class Controller implements Initializable {
                             DataInputStream dataInputStream = new DataInputStream(inputStream);
                             String meta = null;
                             while ((meta = dataInputStream.readUTF()) != null) {
-                                if (meta.startsWith("close")) {
+                                if (meta.equals("close")) {
                                     Platform.runLater(() -> { displayText("연결이 끊어졌습니다."); });
                                     connections.remove(Client.this);
                                     socket.close();
-
                                     Platform.runLater(() -> {
                                         if(flag){
                                             tableView.setRoot(null);
+                                            change10A.setText("0"); change50A.setText("0"); change100A.setText("0"); change500A.setText("0"); change1000A.setText("0");
                                         } else {
                                             tableView1.setRoot(null);
+                                            change10B.setText("0"); change50B.setText("0"); change100B.setText("0"); change500B.setText("0"); change1000B.setText("0");
                                         }
                                         displayText("[연결 개수 : " + connections.size() + " ]");
                                     });
                                 }
-                                else if((meta.startsWith("data"))) {
+                                else if((meta.equals("data"))) {
                                     check = dataInputStream.readUTF();
                                     // 구매 처리하기
                                     if(item1.getValue().getNameProperty().equals(check)) { // 물 구매
@@ -369,7 +377,7 @@ public class Controller implements Initializable {
                                         send("success");
                                     }
                                 }
-                                else if((meta.startsWith("change"))) {
+                                else if((meta.equals("change"))) {
                                     String changeItem1_name = dataInputStream.readUTF(); int changeItem1_price = dataInputStream.readInt(); String changeItem1_stock = dataInputStream.readUTF(); int changeItem1_curr = dataInputStream.readInt();
                                     String changeItem2_name = dataInputStream.readUTF(); int changeItem2_price = dataInputStream.readInt(); String changeItem2_stock = dataInputStream.readUTF(); int changeItem2_curr = dataInputStream.readInt();
                                     String changeItem3_name = dataInputStream.readUTF(); int changeItem3_price = dataInputStream.readInt(); String changeItem3_stock = dataInputStream.readUTF(); int changeItem3_curr = dataInputStream.readInt();
@@ -438,6 +446,72 @@ public class Controller implements Initializable {
                                         });
                                     }
                                     send("change_item");
+                                }
+                                else if((meta.equals("setChange10"))) {
+                                    int count = dataInputStream.readInt();
+                                    if(vending.equals("A")) change10A.setText(String.valueOf(count));
+                                    else change10B.setText(String.valueOf(count));
+                                    send("Change10");
+                                    Platform.runLater(()-> System.out.println("10원: " + count));
+                                }
+                                else if((meta.equals("setChange50"))) {
+                                    int count = dataInputStream.readInt();
+                                    if(vending.equals("A")) change50A.setText(String.valueOf(count));
+                                    else change50B.setText(String.valueOf(count));
+                                    send("Change50");
+                                    Platform.runLater(()-> System.out.println("check: 50원: " + count));
+                                }
+                                else if((meta.equals("setChange100"))) {
+                                    int count = dataInputStream.readInt();
+                                    if(vending.equals("A")) change100A.setText(String.valueOf(count));
+                                    else change100B.setText(String.valueOf(count));
+                                    send("Change100");
+                                    Platform.runLater(()-> System.out.println("check: 100원: " + count));
+                                }
+                                else if((meta.equals("setChange500"))) {
+                                    int count = dataInputStream.readInt();
+                                    if(vending.equals("A")) change500A.setText(String.valueOf(count));
+                                    else change500B.setText(String.valueOf(count));
+                                    send("Change500");
+                                    Platform.runLater(()-> System.out.println("500원: " + count));
+                                }
+                                else if((meta.equals("setChange1000"))) {
+                                    int count = dataInputStream.readInt();
+                                    if(vending.equals("A")) change1000A.setText(String.valueOf(count));
+                                    else change1000B.setText(String.valueOf(count));
+                                    send("Change1000");
+                                    Platform.runLater(()-> System.out.println("1000원: " + count));
+                                }
+                                else if((meta.equals("setChangeAll"))) {
+                                    int c10 = dataInputStream.readInt(); int c50 = dataInputStream.readInt();
+                                    int c100 = dataInputStream.readInt(); int c500 = dataInputStream.readInt();
+                                    int c1000 = dataInputStream.readInt();
+                                    if(vending.equals("A")) {
+                                        change10A.setText(String.valueOf(c10));
+                                        change50A.setText(String.valueOf(c50));
+                                        change100A.setText(String.valueOf(c100));
+                                        change500A.setText(String.valueOf(c500));
+                                        change1000A.setText(String.valueOf(c1000));
+                                    }
+                                    else {
+                                        change10B.setText(String.valueOf(c10));
+                                        change50B.setText(String.valueOf(c50));
+                                        change100B.setText(String.valueOf(c100));
+                                        change500B.setText(String.valueOf(c500));
+                                        change1000B.setText(String.valueOf(c1000));
+                                    }
+                                    Platform.runLater(()-> {
+                                        System.out.println("10원: " + c10);
+                                        System.out.println("50원: " + c50);
+                                        System.out.println("100원: " + c100);
+                                        System.out.println("500원: " + c500);
+                                        System.out.println("1000원: " + c1000);
+                                    });
+                                }
+                                else if((meta.equals("SoldOut"))) {
+                                    String name = dataInputStream.readUTF();
+                                    if(vending.equals("A")) Platform.runLater(()-> displayText("A 자판기에서 " + name + "이 품절되었습니다."));
+                                    else  Platform.runLater(()-> displayText("B 자판기에서 " + name + "이 품절되었습니다."));
                                 }
                             }
                         }
@@ -525,6 +599,36 @@ public class Controller implements Initializable {
                             dataOutputStream.writeUTF(item5.getValue().getStockProperty()); dataOutputStream.writeUTF(item5.getValue().getCurrentProperty());
                             dataOutputStream.flush();
 
+                        }
+                        else if(message.equals("Change10")) {
+                            dataOutputStream.writeUTF("change10");
+                            if(vending.equals("A")) dataOutputStream.writeInt(Integer.parseInt(change10A.getText()));
+                            else dataOutputStream.writeInt(Integer.parseInt(change10B.getText()));
+                            dataOutputStream.flush();
+                        }
+                        else if(message.equals("Change50")) {
+                            dataOutputStream.writeUTF("change50");
+                            if(vending.equals("A")) dataOutputStream.writeInt(Integer.parseInt(change50A.getText()));
+                            else dataOutputStream.writeInt(Integer.parseInt(change50B.getText()));
+                            dataOutputStream.flush();
+                        }
+                        else if(message.equals("Change100")) {
+                            dataOutputStream.writeUTF("change100");
+                            if(vending.equals("A")) dataOutputStream.writeInt(Integer.parseInt(change100A.getText()));
+                            else dataOutputStream.writeInt(Integer.parseInt(change100B.getText()));
+                            dataOutputStream.flush();
+                        }
+                        else if(message.equals("Change500")) {
+                            dataOutputStream.writeUTF("change500");
+                            if(vending.equals("A")) dataOutputStream.writeInt(Integer.parseInt(change500A.getText()));
+                            else dataOutputStream.writeInt(Integer.parseInt(change500B.getText()));
+                            dataOutputStream.flush();
+                        }
+                        else if(message.equals("Change1000")) {
+                            dataOutputStream.writeUTF("change1000");
+                            if(vending.equals("A")) dataOutputStream.writeInt(Integer.parseInt(change1000A.getText()));
+                            else dataOutputStream.writeInt(Integer.parseInt(change1000B.getText()));
+                            dataOutputStream.flush();
                         }
 
                     } catch (Exception e) {
