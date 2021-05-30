@@ -47,7 +47,9 @@ public class AdminController implements Initializable {
 
     // 수금 하기 // 거스름돈에서 빼내기
     public void getCoin(ActionEvent actionEvent) {
-        int totalMoney = Integer.parseInt(money.getText());
+        String currentMoney = money.getText();
+        send("getCoin", currentMoney);
+        int totalMoney = Integer.parseInt(currentMoney);
         money.setText("");
         total = 0;
 

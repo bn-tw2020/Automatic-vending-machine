@@ -842,6 +842,11 @@ public class MainController implements Initializable {
                         dataOutputStream.writeUTF(name);
                         dataOutputStream.flush();
                     }
+                    else if(message.equals("getCoin")) {
+                        dataOutputStream.writeUTF("getCoin");
+                        dataOutputStream.writeUTF(name);
+                        dataOutputStream.flush();
+                    }
                 } catch (IOException e) {
                     Platform.runLater(()-> System.out.println("[서버 통신 안됨]"));
                     stopClient();

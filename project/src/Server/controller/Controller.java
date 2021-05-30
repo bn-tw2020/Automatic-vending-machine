@@ -1,14 +1,12 @@
 package Server.controller;
 
 import Server.model.Item;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTreeTableCell;
-
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -35,6 +33,8 @@ public class Controller implements Initializable {
     @FXML TextField change10B, change50B, change100B, change500B, change1000B;
     @FXML TextField change10A, change50A, change100A, change500A, change1000A;
     Client client;
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // 서버 시작 코드 (Executor Service 생성, ServerSocket 생성 및 포트 바인딩, 연결 수락)
@@ -49,7 +49,6 @@ public class Controller implements Initializable {
             }
             return;
         }
-
         Runnable runnable = new Runnable() { // 수락 작업을 생성
             @Override
             public void run() {
@@ -203,8 +202,7 @@ public class Controller implements Initializable {
             receive();
         }
 
-        void receive() {
-            // 데이터 받기 코드
+        void receive() { // 데이터 받기 코드
             Runnable runnable = new Runnable() { // 받기 작업 생성
                 @Override
                 public void run() {
@@ -221,9 +219,11 @@ public class Controller implements Initializable {
                                     Platform.runLater(() -> {
                                         if(flag){
                                             tableView.setRoot(null);
+                                            totalA.setText("0");
                                             change10A.setText("0"); change50A.setText("0"); change100A.setText("0"); change500A.setText("0"); change1000A.setText("0");
                                         } else {
                                             tableView1.setRoot(null);
+                                            totalB.setText("0");
                                             change10B.setText("0"); change50B.setText("0"); change100B.setText("0"); change500B.setText("0"); change1000B.setText("0");
                                         }
                                         displayText("[연결 개수 : " + connections.size() + " ]");
@@ -513,6 +513,11 @@ public class Controller implements Initializable {
                                     String name = dataInputStream.readUTF();
                                     if(vending.equals("A")) Platform.runLater(()-> displayText("A 자판기에서 " + name + "이 품절되었습니다."));
                                     else  Platform.runLater(()-> displayText("B 자판기에서 " + name + "이 품절되었습니다."));
+                                }
+                                else if((meta.equals("getCoin"))) {
+                                    String money = dataInputStream.readUTF();
+                                    if(vending.equals("A")) Platform.runLater(()-> displayText("A 자판기에서 " + money + "를 수금했습니다."));
+                                    else  Platform.runLater(()-> displayText("B 자판기에서 " + money + "를 수금했습니다."));
                                 }
                             }
                         }
