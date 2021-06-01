@@ -297,6 +297,81 @@ public class MainController implements Initializable {
         });
     }
 
+    public void is_buy_UI() {
+        // 물 구매가능? 품절인가?
+        Platform.runLater(()->{
+            if (total_coins >= item1_price) {
+                water.setDisable(false);
+                if (water_stock.isEmpty()) {
+                    water.setDisable(true);
+                    water.setText("품절");
+                }
+            } else {
+                water.setDisable(true);
+                if (water_stock.isEmpty()) {
+                    water.setDisable(true);
+                    water.setText("품절");
+                }
+            }
+
+            if (total_coins >= item2_price) {
+                coffee.setDisable(false);
+                if (coffee_stock.isEmpty()) {
+                    coffee.setDisable(true);
+                    coffee.setText("품절");
+                }
+            } else {
+                coffee.setDisable(true);
+                if (coffee_stock.isEmpty()) {
+                    coffee.setDisable(true);
+                    coffee.setText("품절");
+                }
+            }
+
+            if (total_coins >= item3_price) {
+                sports_drink.setDisable(false);
+                if (sports_drink_stock.isEmpty()) {
+                    sports_drink.setDisable(true);
+                    sports_drink.setText("품절");
+                }
+            } else {
+                sports_drink.setDisable(true);
+                if (sports_drink_stock.isEmpty()) {
+                    sports_drink.setDisable(true);
+                    sports_drink.setText("품절");
+                }
+            }
+
+            if (total_coins >= item4_price) {
+                premium_coffee.setDisable(false);
+                if (premium_coffee_stock.isEmpty()) {
+                    premium_coffee.setDisable(true);
+                    premium_coffee.setText("품절");
+                }
+            } else {
+                premium_coffee.setDisable(true);
+                if (premium_coffee_stock.isEmpty()) {
+                    premium_coffee.setDisable(true);
+                    premium_coffee.setText("품절");
+                }
+            }
+
+            if (total_coins >= item5_price) {
+                soda.setDisable(false);
+                if (soda_stock.isEmpty()) {
+                    soda.setDisable(true);
+                    soda.setText("품절");
+                }
+            } else {
+                soda.setDisable(true);
+                if (soda_stock.isEmpty()) {
+                    soda.setDisable(true);
+                    soda.setText("품절");
+                }
+            }
+        });
+    }
+
     // 반환 가능한지 버튼 활성화
     public void return_coin() { coin_return.setDisable(total_coins == 0); }
 
@@ -386,6 +461,7 @@ public class MainController implements Initializable {
         coin_10.setDisable(false); coin_50.setDisable(false); coin_100.setDisable(false);
         coin_500.setDisable(false); coin_1000.setDisable(false);
         onOffReturnCoin();
+        is_buy_UI();
     }
 
 
