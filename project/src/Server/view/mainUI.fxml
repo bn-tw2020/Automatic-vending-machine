@@ -101,52 +101,52 @@
       <TextField fx:id="change100B" layoutX="300.0" layoutY="369.0" prefHeight="22.0" prefWidth="39.0" />
       <TextField fx:id="change50B" layoutX="300.0" layoutY="339.0" prefHeight="22.0" prefWidth="39.0" />
       <TextField fx:id="change10B" layoutX="300.0" layoutY="310.0" prefHeight="22.0" prefWidth="39.0" />
-      <Button layoutX="343.0" layoutY="71.0" mnemonicParsing="false" onAction="#setChange10A" prefHeight="22.0" prefWidth="47.0" text="수정">
+      <Button layoutX="343.0" layoutY="71.0" mnemonicParsing="false" onAction="#setChange10" prefHeight="22.0" prefWidth="47.0" text="수정">
          <font>
             <Font size="10.0" />
          </font>
       </Button>
-      <Button layoutX="343.0" layoutY="100.0" mnemonicParsing="false" onAction="#setChange50A" prefHeight="22.0" prefWidth="47.0" text="수정">
+      <Button layoutX="343.0" layoutY="100.0" mnemonicParsing="false" onAction="#setChange50" prefHeight="22.0" prefWidth="47.0" text="수정">
          <font>
             <Font size="10.0" />
          </font>
       </Button>
-      <Button layoutX="343.0" layoutY="130.0" mnemonicParsing="false" onAction="#setChange100A" prefHeight="22.0" prefWidth="47.0" text="수정">
+      <Button layoutX="343.0" layoutY="130.0" mnemonicParsing="false" onAction="#setChange100" prefHeight="22.0" prefWidth="47.0" text="수정">
          <font>
             <Font size="10.0" />
          </font>
       </Button>
-      <Button layoutX="343.0" layoutY="160.0" mnemonicParsing="false" onAction="#setChange500A" prefHeight="22.0" prefWidth="47.0" text="수정">
+      <Button layoutX="343.0" layoutY="160.0" mnemonicParsing="false" onAction="#setChange500" prefHeight="22.0" prefWidth="47.0" text="수정">
          <font>
             <Font size="10.0" />
          </font>
       </Button>
-      <Button layoutX="343.0" layoutY="189.0" mnemonicParsing="false" onAction="#setChange1000A" prefHeight="22.0" prefWidth="47.0" text="수정">
+      <Button layoutX="343.0" layoutY="189.0" mnemonicParsing="false" onAction="#setChange1000" prefHeight="22.0" prefWidth="47.0" text="수정">
          <font>
             <Font size="10.0" />
          </font>
       </Button>
-      <Button layoutX="343.0" layoutY="310.0" mnemonicParsing="false" onAction="#setChange10B" prefHeight="22.0" prefWidth="47.0" text="수정">
+      <Button layoutX="343.0" layoutY="310.0" mnemonicParsing="false" onAction="#setChange10" prefHeight="22.0" prefWidth="47.0" text="수정">
          <font>
             <Font size="10.0" />
          </font>
       </Button>
-      <Button layoutX="343.0" layoutY="339.0" mnemonicParsing="false" onAction="#setChange50B" prefHeight="22.0" prefWidth="47.0" text="수정">
+      <Button layoutX="343.0" layoutY="339.0" mnemonicParsing="false" onAction="#setChange50" prefHeight="22.0" prefWidth="47.0" text="수정">
          <font>
             <Font size="10.0" />
          </font>
       </Button>
-      <Button layoutX="343.0" layoutY="369.0" mnemonicParsing="false" onAction="#setChange100B" prefHeight="22.0" prefWidth="47.0" text="수정">
+      <Button layoutX="343.0" layoutY="369.0" mnemonicParsing="false" onAction="#setChange100" prefHeight="22.0" prefWidth="47.0" text="수정">
          <font>
             <Font size="10.0" />
          </font>
       </Button>
-      <Button layoutX="343.0" layoutY="399.0" mnemonicParsing="false" onAction="#setChange500B" prefHeight="22.0" prefWidth="47.0" text="수정">
+      <Button layoutX="343.0" layoutY="399.0" mnemonicParsing="false" onAction="#setChange500" prefHeight="22.0" prefWidth="47.0" text="수정">
          <font>
             <Font size="10.0" />
          </font>
       </Button>
-      <Button layoutX="343.0" layoutY="428.0" mnemonicParsing="false" onAction="#setChange1000B" prefHeight="22.0" prefWidth="47.0" text="수정">
+      <Button layoutX="343.0" layoutY="428.0" mnemonicParsing="false" onAction="#setChange1000" prefHeight="22.0" prefWidth="47.0" text="수정">
          <font>
             <Font size="10.0" />
          </font>
