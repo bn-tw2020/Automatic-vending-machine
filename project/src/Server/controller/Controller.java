@@ -102,15 +102,10 @@ public class Controller implements Initializable {
     }
 
     public void setChange10(ActionEvent actionEvent) { client.send("Change10"); }
-//    public void setChange10B(ActionEvent actionEvent) { client.send("Change10"); }
-//    public void setChange50A(ActionEvent actionEvent) { client.send("Change50"); }
     public void setChange50(ActionEvent actionEvent) { client.send("Change50"); }
     public void setChange100(ActionEvent actionEvent) { client.send("Change100"); }
-//    public void setChange100B(ActionEvent actionEvent) { client.send("Change100"); }
     public void setChange500(ActionEvent actionEvent) { client.send("Change500"); }
-//    public void setChange500B(ActionEvent actionEvent) { client.send("Change500"); }
     public void setChange1000(ActionEvent actionEvent) { client.send("Change1000"); }
-//    public void setChange1000B(ActionEvent actionEvent) { client.send("Change1000"); }
 
     class Client {
         // 데이터 통신 코드
