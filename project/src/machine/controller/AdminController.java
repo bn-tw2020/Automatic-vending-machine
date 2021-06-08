@@ -45,7 +45,7 @@ public class AdminController implements Initializable {
     public AreaChart chart;
     TreeItem<Item> item1, item2, item3, item4, item5, root;
 
-    // 수금 하기 // 거스름돈에서 빼내기
+    // 수금 하기
     public void getCoin(ActionEvent actionEvent) {
         String currentMoney = money.getText();
         send("getCoin", currentMoney);
@@ -86,6 +86,7 @@ public class AdminController implements Initializable {
         txtDisplay.setText(outputString.trim() + "를 수금했습니다.");
     }
 
+    // 기본 초기 세팅
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         changeID.setText(LoginController.userId);
@@ -167,15 +168,17 @@ public class AdminController implements Initializable {
         monthUpdate();
     }
 
+    // 관리자 페이지 나가기
     public void goBack(ActionEvent actionEvent) {
         MainController.exit_stage(back);
     }
 
+    // 아이템 재고, 명, 가격 변경 데이터 보내기
     public void setData(ActionEvent actionEvent) {
-        // 데이터 보내기 / 아이템1, 아이템2, 아이템3, 아이템4, 아이템5 보내기
         MainController.send("change");
     }
 
+    // 관리자 정보 수정하기
     public void setAdmin(ActionEvent actionEvent) throws Exception {
         String filePath = Objects.requireNonNull(LoginController.class.getResource("")).getPath() + "../data/user.txt";
         File file = new File(filePath);
@@ -192,6 +195,7 @@ public class AdminController implements Initializable {
         }
     }
 
+    // 품절 확인하기
     public void soldUpdate() {
         String filePath = Objects.requireNonNull(SignUpController.class.getResource("")).getPath() + "../data/soldout.txt";
         File file = new File(filePath);
@@ -207,6 +211,7 @@ public class AdminController implements Initializable {
         }
     }
 
+    // 매출 업데이트하기
     public void monthUpdate() {
         int month, price;
         String temp;
@@ -248,6 +253,7 @@ public class AdminController implements Initializable {
 
     }
 
+    // 거스름 돈 수정하기
     public void setChange10(ActionEvent actionEvent) {
         int changeCoin = Integer.parseInt(change10.getText());
         if(change_10.size() == changeCoin) return;

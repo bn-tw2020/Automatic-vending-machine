@@ -23,6 +23,7 @@ public class SignUpController implements Initializable {
     public TextField id;
     public TextField pw;
 
+    // 사용 가능한 아이디인지 확인하기
     public void confirmBtn(ActionEvent actionEvent) throws Exception {
         String filePath = Objects.requireNonNull(SignUpController.class.getResource("")).getPath() + "../data/user.txt";
         File file = new File(filePath);
@@ -58,6 +59,7 @@ public class SignUpController implements Initializable {
         }
     }
 
+    // 회원가입 하기
     public void signupBtn(ActionEvent actionEvent) throws Exception {
         String ID = id.getText();
         String PW = pw.getText();
@@ -73,6 +75,7 @@ public class SignUpController implements Initializable {
         }
     }
 
+    // 비밀번호 조건 확인하기
     public static boolean check(String password) {
         Pattern pattern = Pattern.compile("([a-zA-Z0-9].*[!,@,#,$,%,^,&,*,?,_,~])|([!,@,#,$,%,^,&,*,?,_,~].*[a-zA-Z0-9])");
         Matcher matcher = pattern.matcher(password);
@@ -80,6 +83,7 @@ public class SignUpController implements Initializable {
         return matcher.find() && (password.length() >= 8);
     }
 
+    // 로그인 화면으로 돌아가기
     public void backBtn(ActionEvent actionEvent) {
         MainController.exit_stage(signup);
         MainController.new_stage("loginUI", "login");

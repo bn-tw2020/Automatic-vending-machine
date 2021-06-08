@@ -297,6 +297,7 @@ public class MainController implements Initializable {
         });
     }
 
+    // 품절 UI 업데이트
     public void is_buy_UI() {
         // 물 구매가능? 품절인가?
         Platform.runLater(()->{
@@ -402,6 +403,7 @@ public class MainController implements Initializable {
         }
     }
 
+    // 반환코인이 없다면 비활성화
     public void onOffReturnCoin() {
         coin_return.setDisable(total_coins == 0);
     }
@@ -490,7 +492,7 @@ public class MainController implements Initializable {
         stage.show();
     }
 
-    // 공용 함수
+    // 공용 함수, 화면 없애기
     static public void exit_stage(Button btn) {
         Stage stage = (Stage)btn.getScene().getWindow();
         stage.close();
@@ -549,6 +551,7 @@ public class MainController implements Initializable {
     /*
         1. 소켓 통신
      */
+    // 연결 하기
     public void startClient(){
         // 연결 시작 코드
         Thread thread = new Thread(){
@@ -569,8 +572,8 @@ public class MainController implements Initializable {
         thread.start();
     }
 
+    // 연결 끊기
     public static void stopClient(){
-        // 연결 끊기 코드
         try{
             Platform.runLater(()->{ System.out.println("연결 끊음"); });
             if(socket != null && !socket.isClosed()){
@@ -579,8 +582,8 @@ public class MainController implements Initializable {
         }catch(IOException ignored){ }
     }
 
+    // 데이터 받기 코드
     void receive(){
-        // 데이터 받기 코드
         while(true){
             try {
                 InputStream inputStream = socket.getInputStream();
@@ -588,6 +591,7 @@ public class MainController implements Initializable {
                 String meta = null;
 
                 while((meta = dataInputStream.readUTF()) != null) {
+                    // 초기 세팅
                     if(meta.equals("init")) { // 소켓과의 초기 세팅
                         int initChange = dataInputStream.readInt();
                         int initBeverage = dataInputStream.readInt();
@@ -604,6 +608,7 @@ public class MainController implements Initializable {
                             System.out.println("10원 : " + change_10.size() + " 50원 : " + change_50.size() + " 100원 : " + change_100.size() + " 500원 : " + change_500.size() + " 1000원 : " + change_1000.size());
                         });
                     }
+                    // 아이템 구매 확인 메시지
                     else if(meta.equals("success")) {
                         String check = dataInputStream.readUTF();
                         if(check.equals(item1_name)) {
@@ -712,6 +717,7 @@ public class MainController implements Initializable {
                             }
                         }
                     }
+                    // 아이템 변경(재고, 이름, 가격)
                     else if(meta.equals("change_item")) {
                         item1_name = dataInputStream.readUTF(); item1_price = Integer.parseInt(dataInputStream.readUTF());
                         item1_stock = dataInputStream.readUTF(); item1_curr = Integer.parseInt(dataInputStream.readUTF());
@@ -751,6 +757,7 @@ public class MainController implements Initializable {
                         });
 
                     }
+                    // 거스름돈 10원 개수 변경
                     else if(meta.equals("change10")) {
                         int changeCoin = dataInputStream.readInt();
                         Platform.runLater(()->{
@@ -767,6 +774,7 @@ public class MainController implements Initializable {
                             System.out.println();
                         });
                     }
+                    // 거스름돈 50원 개수 변경
                     else if(meta.equals("change50")) {
                         int changeCoin = dataInputStream.readInt();
                         Platform.runLater(()->{
@@ -783,6 +791,7 @@ public class MainController implements Initializable {
                             System.out.println();
                         });
                     }
+                    // 거스름돈 100원 개수 변경
                     else if(meta.equals("change100")) {
                         int changeCoin = dataInputStream.readInt();
                         Platform.runLater(()->{
@@ -799,6 +808,7 @@ public class MainController implements Initializable {
                             System.out.println();
                         });
                     }
+                    // 거스름돈 500원 개수 변경
                     else if(meta.equals("change500")) {
                         int changeCoin = dataInputStream.readInt();
                         Platform.runLater(()->{
@@ -815,6 +825,7 @@ public class MainController implements Initializable {
                             System.out.println();
                         });
                     }
+                    // 거스름돈 1000원 개수 변경
                     else if(meta.equals("change1000")) {
                         int changeCoin = dataInputStream.readInt();
                         Platform.runLater(()->{
@@ -848,11 +859,13 @@ public class MainController implements Initializable {
             public void run() {
                 try {
                     DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                    // 연결 끊기 위한 메시지 보내기
                     if(message.equals("close")) {
                         Platform.runLater(()-> System.out.println(message));
                         dataOutputStream.writeUTF("close");
                         dataOutputStream.flush();
                     }
+                    // 어떤 음료수를 구할지 메시지 보내기
                     else if(message.equals(item1_name)) {
                         dataOutputStream.writeUTF("data");
                         dataOutputStream.writeUTF(item1_name);
@@ -878,6 +891,7 @@ public class MainController implements Initializable {
                         dataOutputStream.writeUTF(item5_name);
                         dataOutputStream.flush();
                     }
+                    // 음료수 명, 가격, 재고 변경 메시지 보내기
                     else if(message.equals("change")) {
                         dataOutputStream.writeUTF("change");
                         dataOutputStream.writeUTF(item1_name); dataOutputStream.writeInt(item1_price);
@@ -906,18 +920,20 @@ public class MainController implements Initializable {
         };
         thread.start();
     }
-
+    // 데이터 전송 (수금, 품절)
     static void send(String message, String name) {
         Thread thread = new Thread(){
             @Override
             public void run() {
                 try {
                     DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                    // 품절 메시지 보내기
                     if(message.equals("SoldOut")) {
                         dataOutputStream.writeUTF("SoldOut");
                         dataOutputStream.writeUTF(name);
                         dataOutputStream.flush();
                     }
+                    // 수금하기
                     else if(message.equals("getCoin")) {
                         dataOutputStream.writeUTF("getCoin");
                         dataOutputStream.writeUTF(name);
@@ -933,13 +949,14 @@ public class MainController implements Initializable {
         thread.start();
     }
 
+    // 데이터 전송 (관지자 페이지), 거스름돈 변경
     static void send(String message, String money, int count){
-        // 데이터 전송 코드
         Thread thread = new Thread(){
             @Override
             public void run() {
                 try {
                     DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                    // 거스름돈 변경하기
                     if(message.equals("setChange")) {
                         if(money.equals("10")) {
                             Platform.runLater(()->{
@@ -956,8 +973,7 @@ public class MainController implements Initializable {
                             dataOutputStream.writeUTF("setChange50");
                             dataOutputStream.writeInt(count);
                             dataOutputStream.flush();
-                        } // 5 5 5 5 8
-                          // 5 4 2 4 8
+                        }
                         else if(money.equals("100")) {
                             Platform.runLater(()->{
                                 System.out.println(message + " " + money + " " + count);
@@ -994,8 +1010,8 @@ public class MainController implements Initializable {
         thread.start();
     }
 
+    // 데이터 전송 코드
     static void send(String message, int c10, int c50, int c100, int c500, int c1000){
-        // 데이터 전송 코드
         Thread thread = new Thread(){
             @Override
             public void run() {
@@ -1020,7 +1036,7 @@ public class MainController implements Initializable {
 
 
     /*
-        1. 초기 세팅
+        1. 초기 세팅 파일 세팅(매출)
      */
 
     public void settingBeverage() {
@@ -1046,7 +1062,6 @@ public class MainController implements Initializable {
             e.printStackTrace();
         }
     }
-
     public void settingSoldout() {
         String filePath = Objects.requireNonNull(MainController.class.getResource("")).getPath() + "../data/soldout.txt";
         File file = new File(filePath);

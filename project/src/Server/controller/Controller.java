@@ -34,10 +34,9 @@ public class Controller implements Initializable {
     @FXML TextField change10A, change50A, change100A, change500A, change1000A;
     Client client;
 
-
+    // 서버 시작 코드 (Executor Service 생성, ServerSocket 생성 및 포트 바인딩, 연결 수락)
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // 서버 시작 코드 (Executor Service 생성, ServerSocket 생성 및 포트 바인딩, 연결 수락)
         totalA.setEditable(false); totalB.setEditable(false);
         executorService = Executors.newFixedThreadPool(300);
         try {
@@ -57,12 +56,12 @@ public class Controller implements Initializable {
                 });
                 while (true) {
                     try {
-                        while(connections.size() >= 2) {}
+                        while(connections.size() >= 2) {} // 최대 클라이언트는 2개만..
                         Socket socket = serverSocket.accept(); // 연결 수락
                         String message = "[연결 수락 : " + socket.getRemoteSocketAddress() + ": " + Thread.currentThread().getName() + "]";
                         Platform.runLater(() -> displayText(message));
                         client = new Client(socket);
-                        connections.add(client);
+                        connections.add(client); // 클라이언트 관리하기
                         Platform.runLater(() -> displayText("[연결 개수 : " + connections.size() + " ]"));
                     } catch (Exception e) {
                         if (!serverSocket.isClosed()) {
@@ -76,14 +75,15 @@ public class Controller implements Initializable {
         executorService.submit(runnable); // 스레드 풀에서 처리
     }
 
+    // 음료수 명, 재고, 가격 수정하기 (데이터 전송)
     public void fix(ActionEvent actionEvent) {
         if(client.vending.equals("A")) client.send("change_item");
         else if(client.vending.equals("B")) client.send("change_item");
         else{ return;}
     }
 
+    // 서버 종료 코드
     void stopServer() {
-        // 서버 종료 코드
         try {
             Iterator<Client> iterator = connections.iterator();
             while (iterator.hasNext()) { // 모든 socket 닫기
@@ -101,20 +101,23 @@ public class Controller implements Initializable {
         }
     }
 
+    // 거스름 돈 재고 수정하기
     public void setChange10(ActionEvent actionEvent) { client.send("Change10"); }
     public void setChange50(ActionEvent actionEvent) { client.send("Change50"); }
     public void setChange100(ActionEvent actionEvent) { client.send("Change100"); }
     public void setChange500(ActionEvent actionEvent) { client.send("Change500"); }
     public void setChange1000(ActionEvent actionEvent) { client.send("Change1000"); }
 
+
+    // 데이터 통신(클라이언트)
     class Client {
-        // 데이터 통신 코드
         Socket socket;
         int total_coins = 0; // 총 수익금
         public String check = null;
         TreeItem<Item> item1, item2, item3, item4, item5, root;
         Boolean flag = false;
         String vending = "";
+        // 생성자는 각각 기본 세팅을 다루며, 빈 자리를 메우게 된다. 클라이언트에게 기본 세팅 전달.
         Client(Socket socket) {
             this.socket = socket;
             item1 = new TreeItem<>(new Item("물", "450", "3", "0"));
@@ -197,7 +200,8 @@ public class Controller implements Initializable {
             receive();
         }
 
-        void receive() { // 데이터 받기 코드
+        // 데이터 받기 코드
+        void receive() {
             Runnable runnable = new Runnable() { // 받기 작업 생성
                 @Override
                 public void run() {
@@ -206,7 +210,9 @@ public class Controller implements Initializable {
                             InputStream inputStream = socket.getInputStream();
                             DataInputStream dataInputStream = new DataInputStream(inputStream);
                             String meta = null;
+                            // 받을 데이터가 존재한다면
                             while ((meta = dataInputStream.readUTF()) != null) {
+                                // 클라이언트와 연결 종료
                                 if (meta.equals("close")) {
                                     Platform.runLater(() -> { displayText("연결이 끊어졌습니다."); });
                                     connections.remove(Client.this);
@@ -224,6 +230,7 @@ public class Controller implements Initializable {
                                         displayText("[연결 개수 : " + connections.size() + " ]");
                                     });
                                 }
+                                // 클라이언트에서 음료수 구매가 발생한 경우
                                 else if((meta.equals("data"))) {
                                     check = dataInputStream.readUTF();
                                     // 구매 처리하기
@@ -373,6 +380,7 @@ public class Controller implements Initializable {
                                         send("success");
                                     }
                                 }
+                                // 클라이언트에서 음료수 가격, 재고, 이름을 변경한 경우
                                 else if((meta.equals("change"))) {
                                     String changeItem1_name = dataInputStream.readUTF(); int changeItem1_price = dataInputStream.readInt(); String changeItem1_stock = dataInputStream.readUTF(); int changeItem1_curr = dataInputStream.readInt();
                                     String changeItem2_name = dataInputStream.readUTF(); int changeItem2_price = dataInputStream.readInt(); String changeItem2_stock = dataInputStream.readUTF(); int changeItem2_curr = dataInputStream.readInt();
@@ -443,6 +451,7 @@ public class Controller implements Initializable {
                                     }
                                     send("change_item");
                                 }
+                                // 클라이언트에서 거스름 돈을 바꾼 경우
                                 else if((meta.equals("setChange10"))) {
                                     int count = dataInputStream.readInt();
                                     if(vending.equals("A")) change10A.setText(String.valueOf(count));
@@ -504,11 +513,13 @@ public class Controller implements Initializable {
                                         System.out.println("1000원: " + c1000);
                                     });
                                 }
+                                // 클라이언트에서 품절 현상이 발생한 경우
                                 else if((meta.equals("SoldOut"))) {
                                     String name = dataInputStream.readUTF();
                                     if(vending.equals("A")) Platform.runLater(()-> displayText("A 자판기에서 " + name + "이 품절되었습니다."));
                                     else  Platform.runLater(()-> displayText("B 자판기에서 " + name + "이 품절되었습니다."));
                                 }
+                                // 클라이언트에서 수금을 한 경우
                                 else if((meta.equals("getCoin"))) {
                                     String money = dataInputStream.readUTF();
                                     if(vending.equals("A")) Platform.runLater(()-> displayText("A 자판기에서 " + money + "를 수금했습니다."));
@@ -530,14 +541,15 @@ public class Controller implements Initializable {
             executorService.submit(runnable); // 스레드풀에서 처리
         }
 
+        // 데이터 전송 코드
         void send(String message) {
-            // 데이터 전송 코드
             Runnable runnable = new Runnable() { // 보내기 작업 생성
                 @Override
                 public void run() {
                     try {
                         DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
 
+                        // 클라이언트 처음 접속 후 기본 세팅(음료수, 거스름 돈 등) 전송
                         if (message.equals("init")) {
                             dataOutputStream.writeUTF("init");
                             dataOutputStream.writeInt(5);
@@ -549,6 +561,7 @@ public class Controller implements Initializable {
                             dataOutputStream.writeUTF(item5.getValue().getNameProperty()); dataOutputStream.writeInt(Integer.parseInt(item5.getValue().getPriceProperty()));
                             dataOutputStream.flush();
                         }
+                        // 클라이언트가 음료수 구매가 확인된 경우 완료 메시지 전송
                         else if(message.equals("success")) {
                             if(item1.getValue().getNameProperty().equals(check)) { // 물 성공
                                 dataOutputStream.writeUTF("success");
@@ -601,6 +614,7 @@ public class Controller implements Initializable {
                                 });
                             }
                         }
+                        // 아이템(음료수) 변경 완료 메시지 전송
                         else if(message.equals("change_item")) {
                             dataOutputStream.writeUTF("change_item");
                             dataOutputStream.writeUTF(item1.getValue().getNameProperty()); dataOutputStream.writeUTF(item1.getValue().getPriceProperty());
@@ -620,6 +634,7 @@ public class Controller implements Initializable {
                             dataOutputStream.flush();
 
                         }
+                        // 거스름 돈 수정 완료 메시지 전송
                         else if(message.equals("Change10")) {
                             dataOutputStream.writeUTF("change10");
                             if(vending.equals("A")) dataOutputStream.writeInt(Integer.parseInt(change10A.getText()));

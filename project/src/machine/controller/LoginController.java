@@ -21,6 +21,7 @@ public class LoginController{
 
     static String userId, userPw;
 
+    // 로그인하기
     @FXML
     public void loginBtn(ActionEvent event) {
         String ID = id.getText();
@@ -53,10 +54,13 @@ public class LoginController{
             e.printStackTrace();
         }
     }
+
+    // 원래 화면으로 돌아가기
     @FXML
     public void backBtn(ActionEvent event){
         MainController.exit_stage(signup);
     }
+    // 회원가입 화면으로 가기
     @FXML
     public void signupBtn(ActionEvent event) {
         MainController.exit_stage(signup);
