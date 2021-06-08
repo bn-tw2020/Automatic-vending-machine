@@ -730,23 +730,23 @@ public class MainController implements Initializable {
                             water_stock.clear(); coffee_stock.clear(); sports_drink_stock.clear(); premium_coffee_stock.clear(); soda_stock.clear();
                             for (int i = 0; i < Integer.parseInt(item1_stock); i++) {
                                 water_stock.add(new Beverage(item1_name, item1_price));
-                                is_buy();
+                                is_buy_UI();
                             }
                             for (int i = 0; i < Integer.parseInt(item2_stock); i++) {
                                 coffee_stock.add(new Beverage(item2_name, item2_price));
-                                is_buy();
+                                is_buy_UI();
                             }
                             for (int i = 0; i < Integer.parseInt(item3_stock); i++) {
                                 sports_drink_stock.add(new Beverage(item3_name, item3_price));
-                                is_buy();
+                                is_buy_UI();
                             }
                             for (int i = 0; i < Integer.parseInt(item4_stock); i++) {
                                 premium_coffee_stock.add(new Beverage(item4_name, item4_price));
-                                is_buy();
+                                is_buy_UI();
                             }
                             for (int i = 0; i < Integer.parseInt(item5_stock); i++) {
                                 soda_stock.add(new Beverage(item5_name, item5_price));
-                                is_buy();
+                                is_buy_UI();
                             }
                         });
 

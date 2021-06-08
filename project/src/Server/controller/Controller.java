@@ -381,11 +381,6 @@ public class Controller implements Initializable {
                                     String changeItem5_name = dataInputStream.readUTF(); int changeItem5_price = dataInputStream.readInt(); String changeItem5_stock = dataInputStream.readUTF(); int changeItem5_curr = dataInputStream.readInt();
                                     if(vending.equals("A")) {
                                         Platform.runLater(()-> {
-                                            System.out.println(changeItem1_curr);
-                                            System.out.println(changeItem2_curr);
-                                            System.out.println(changeItem3_curr);
-                                            System.out.println(changeItem4_curr);
-                                            System.out.println(changeItem5_curr);
 
                                             tableView.getTreeItem(0).getValue().setNameProperty(changeItem1_name); tableView.getTreeItem(0).getValue().setPriceProperty(String.valueOf(changeItem1_price));
                                             tableView.getTreeItem(0).getValue().setStockProperty(changeItem1_stock); tableView.getTreeItem(0).getValue().setCurrentProperty(String.valueOf(changeItem1_curr));
@@ -411,6 +406,11 @@ public class Controller implements Initializable {
                                             tableView.getTreeItem(4).getValue().setStockProperty(changeItem5_stock); tableView.getTreeItem(4).getValue().setCurrentProperty(String.valueOf(changeItem5_curr));
                                             item5.getValue().setNameProperty(changeItem5_name); item5.getValue().setPriceProperty(String.valueOf(changeItem5_price));
                                             item5.getValue().setStockProperty(changeItem5_stock); item5.getValue().setCurrentProperty(String.valueOf(changeItem5_curr));
+                                            System.out.println(item1.getValue().getNameProperty() + " " + item1.getValue().getPriceProperty() + " " + item1.getValue().getStockProperty() + " " + item1.getValue().getCurrentProperty());
+                                            System.out.println(item2.getValue().getNameProperty() + " " + item2.getValue().getPriceProperty() + " " + item2.getValue().getStockProperty() + " " + item2.getValue().getCurrentProperty());
+                                            System.out.println(item3.getValue().getNameProperty() + " " + item3.getValue().getPriceProperty() + " " + item3.getValue().getStockProperty() + " " + item3.getValue().getCurrentProperty());
+                                            System.out.println(item4.getValue().getNameProperty() + " " + item4.getValue().getPriceProperty() + " " + item4.getValue().getStockProperty() + " " + item4.getValue().getCurrentProperty());
+                                            System.out.println(item5.getValue().getNameProperty() + " " + item5.getValue().getPriceProperty() + " " + item5.getValue().getStockProperty() + " " + item5.getValue().getCurrentProperty());
                                         });
                                     }
                                     else if(vending.equals("B")) {
