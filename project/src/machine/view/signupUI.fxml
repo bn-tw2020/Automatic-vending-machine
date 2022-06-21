@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="machine.controller.SignUpController">
+    <children>
+        <Label layoutX="255.0" layoutY="53.0" text="Sign up">
+            <font>
+                <Font name="Bauhaus 93" size="34.0" />
+            </font>
+        </Label>
+        <TextField fx:id="id" layoutX="229.0" layoutY="129.0" />
+        <TextField fx:id="pw" layoutX="229.0" layoutY="187.0" />
+        <Label layoutX="117.0" layoutY="120.0" text="ID">
+            <font>
+                <Font name="Bauhaus 93" size="34.0" />
+            </font>
+        </Label>
+        <Label layoutX="65.0" layoutY="176.0" text="password">
+            <font>
+                <Font name="Bauhaus 93" size="34.0" />
+            </font>
+        </Label>
+        <Button fx:id="confirm" layoutX="229.0" layoutY="265.0" mnemonicParsing="false" onAction="#confirmBtn" prefHeight="32.0" prefWidth="72.0" text="confirm">
+            <font>
+                <Font name="Bauhaus 93" size="13.0" />
+            </font>
+        </Button>
+        <Button fx:id="signup" layoutX="317.0" layoutY="265.0" mnemonicParsing="false" onAction="#signupBtn" prefHeight="32.0" prefWidth="72.0" text="Signup">
+            <font>
+                <Font name="Bauhaus 93" size="13.0" />
+            </font>
+        </Button>
+        <Button fx:id="back" layoutX="229.0" layoutY="309.0" mnemonicParsing="false" onAction="#backBtn" prefHeight="32.0" prefWidth="161.0" text="Back">
+            <font>
+                <Font name="Bauhaus 93" size="17.0" />
+            </font>
+        </Button>
+      <Label layoutX="229.0" layoutY="215.0" text="비밀번호는 영문과 숫자 특수문자를 포함한" textFill="RED" />
+      <Label layoutX="229.0" layoutY="229.0" text="8자리 이상으로 구성되어야 한다." textFill="RED" />
+    </children>
+</Pane>
